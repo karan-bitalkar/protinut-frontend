@@ -1,0 +1,429 @@
+/* ==========================================================
+   PROTINUT™ NAVBAR STYLES
+   Exact recreation of the reference navbar
+   Color: #ed6805 (Protinut Orange)
+   ========================================================== */
+
+.protinut-navbar-wrapper {
+  width: 100%;
+  background-color: #ed6805;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.protinut-navbar {
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  background-color: #ed6805;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* --- Brand Logo --- */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  padding: 4px 0;
+}
+
+.logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* --- Navigation Links --- */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 26px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 6px 2px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  opacity: 0.9;
+}
+
+/* Active Underline Indicator (Same as HOME in screenshot) */
+.active-indicator {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+/* Dropdown Chevron */
+.chevron-icon {
+  display: inline-block;
+  margin-top: 1px;
+}
+
+/* --- Right Side Actions --- */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+/* Vertical Thin Divider Line */
+.nav-divider {
+  width: 1px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.45);
+  margin-right: 2px;
+}
+
+/* Action Icon Buttons */
+.action-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  position: relative;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.action-btn:hover {
+  opacity: 0.85;
+  transform: scale(1.08);
+}
+
+.action-icon {
+  stroke: #ffffff;
+  display: block;
+}
+
+/* User Profile Pill & Dropdown */
+.nav-user-menu-wrap {
+  position: relative;
+}
+
+.nav-user-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 4px 10px 4px 4px;
+  border-radius: 9999px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-user-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: #ffffff;
+}
+
+.user-avatar-initial {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #ef5323;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-pill-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  max-width: 95px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-arrow {
+  opacity: 0.8;
+}
+
+/* Dropdown Window */
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 220px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
+  border: 1px solid #ede5dd;
+  padding: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: authScaleUp 0.18s ease-out;
+}
+
+.dropdown-header {
+  padding: 8px 10px 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-header strong {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1512;
+}
+
+.dropdown-header small {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  color: #7a6e65;
+  margin-top: 2px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f0e8e0;
+  margin: 4px 0;
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #3b2c23;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background: #fff4ee;
+  color: #ef5323;
+}
+
+.dropdown-item.logout-item {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.dropdown-item.logout-item:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* Notification Badges (White circles with orange text) */
+.badge-btn {
+  position: relative;
+}
+
+.count-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
+  color: #ed6805;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  line-height: 1;
+}
+
+/* SHOP NOW -> Pill Button */
+.btn-shop-now {
+  background-color: #ffffff;
+  color: #ed6805;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  margin-left: 4px;
+}
+
+.btn-shop-now:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  background-color: #fffefd;
+}
+
+.arrow-icon {
+  stroke: #ed6805;
+  transition: transform 0.2s ease;
+}
+
+.btn-shop-now:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+/* Mobile Hamburger Button */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.hamburger-btn .bar {
+  width: 100%;
+  height: 2.2px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* ==========================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================== */
+@media (max-width: 1080px) {
+  .nav-menu {
+    gap: 16px;
+  }
+  .nav-link {
+    font-size: 12px;
+  }
+  .navbar-container {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-menu {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    width: 100%;
+    background-color: #ed6805;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 24px 24px;
+    gap: 14px;
+    height: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    display: none;
+  }
+
+  .nav-menu.mobile-active {
+    display: flex;
+  }
+
+  .nav-item {
+    width: 100%;
+    height: auto;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .active-indicator {
+    display: none;
+  }
+
+  .nav-divider {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar-container {
+    padding: 0 14px;
+  }
+  .logo-img {
+    height: 26px;
+  }
+  .btn-shop-now {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  .btn-shop-now span {
+    display: none;
+  }
+  .navbar-actions {
+    gap: 10px;
+  }
+}

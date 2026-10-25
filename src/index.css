@@ -1,0 +1,64 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #ffffff;
+  color: #1e1e24;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Global Floating Cart Toast */
+.global-cart-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  animation: slideUpToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.global-cart-toast.success {
+  background: #1f140e;
+  color: #ffffff;
+  border: 1.5px solid #ed6805;
+}
+
+.global-cart-toast.warning {
+  background: #fff1f0;
+  color: #b91c1c;
+  border: 1.5px solid #f87171;
+}
+
+@keyframes slideUpToast {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .global-cart-toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    font-size: 13px;
+    justify-content: center;
+    text-align: center;
+  }
+}

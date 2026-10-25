@@ -1,0 +1,258 @@
+/* ==========================================================
+   PROTINUT™ HERO CAROUSEL
+   Flipkart / E-Commerce Style Auto-Sliding Banner
+   - Uniform Fixed Height (Never jumps or shifts)
+   - Ambient Blurred Backdrop (No awkward blank borders)
+   - Slide Counter Badge (Current / Total)
+   - Interactive Dots + Flipkart-style Progress Line
+   ========================================================== */
+
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: clamp(380px, 40vw, 550px);
+  overflow: hidden;
+  background-color: #1a120b;
+  user-select: none;
+}
+
+/* Slide Track */
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Each slide — full frame */
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Active slide is visible */
+.carousel-slide.active {
+  position: absolute;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.carousel-slide.prev {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Ambient Blurred Backdrop behind the banner */
+.slide-backdrop {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(36px) brightness(0.6) saturate(1.3);
+  transform: scale(1.15);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Sharp foreground frame */
+.slide-content-frame {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Main banner image — fills the fixed height uniformly */
+.slide-img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.35));
+}
+
+/* ── Slide Counter Badge (Flipkart/Myntra style) ── */
+.carousel-counter {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-counter span:first-child {
+  color: #ff914d;
+  font-size: 13px;
+}
+
+/* ── Arrow Buttons ── */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0;                     /* hidden by default */
+}
+
+.hero-carousel:hover .carousel-arrow {
+  opacity: 1;                     /* shows on hover — exactly like Flipkart */
+}
+
+.arrow-left  { left: 16px; }
+.arrow-right { right: 16px; }
+
+.carousel-arrow:hover {
+  background-color: #ed6805;
+  color: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* ── Dot Indicators ── */
+.carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 85%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 5px 12px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.carousel-dots::-webkit-scrollbar {
+  display: none;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background-color: #ed6805;
+  border-color: #ed6805;
+  width: 18px;                    /* active dot stretches like Flipkart */
+  border-radius: 4px;
+}
+
+.dot:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* ── Progress Bar (Flipkart thin line at bottom) ── */
+.carousel-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #ed6805;
+  width: 0%;
+  animation: progressSlide linear forwards;
+}
+
+@keyframes progressSlide {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .hero-carousel {
+    height: clamp(280px, 40vw, 420px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-carousel {
+    height: 240px;
+  }
+
+  .carousel-arrow {
+    width: 34px;
+    height: 34px;
+    opacity: 1;
+  }
+
+  .arrow-left  { left: 8px; }
+  .arrow-right { right: 8px; }
+
+  .carousel-counter {
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-carousel {
+    height: 180px;
+  }
+}

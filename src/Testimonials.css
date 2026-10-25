@@ -1,0 +1,196 @@
+/* ══════════════════════════════════════════════════════════════
+   CUSTOMER TESTIMONIALS & REVIEWS SECTION
+   ══════════════════════════════════════════════════════════════ */
+
+.testimonials-section {
+  width: 100%;
+  background: radial-gradient(circle at 10% 80%, #fffbf5 0%, #f7ede0 100%);
+  padding: 80px 24px 90px;
+  position: relative;
+  border-bottom: 1px solid #ede3d6;
+}
+
+.testimonials-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonials-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 46px;
+}
+
+.testimonials-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ef5323;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.testimonials-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(26px, 3vw, 36px);
+  color: #2b1811;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+.overall-rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #ebd9c8;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 14px rgba(45, 25, 15, 0.05);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #4a3e36;
+}
+
+.stars-cluster .star {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+/* Reviews Grid */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+
+.review-card {
+  background: #ffffff;
+  border: 1px solid #ede4d6;
+  border-radius: 22px;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(45, 25, 15, 0.04);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(239, 83, 35, 0.12);
+  border-color: #ebd0be;
+}
+
+.review-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.review-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.review-stars .star {
+  color: #ef5323;
+  font-size: 17px;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 9999px;
+}
+
+.review-quote-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1f1814;
+  line-height: 1.35;
+  margin: 0 0 10px 0;
+}
+
+.review-quote-body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  color: #5c5047;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.reviewer-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px dashed #efe4d8;
+  position: relative;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f25f2b 0%, #c4370c 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.reviewer-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.reviewer-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #2b1811;
+}
+
+.reviewer-role {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  color: #887a70;
+}
+
+.reviewed-product-tag {
+  margin-left: auto;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #fbf5ed;
+  border: 1px solid #ebdacf;
+  color: #a05a2c;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}

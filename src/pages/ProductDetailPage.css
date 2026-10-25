@@ -1,0 +1,533 @@
+/* ══════════════════════════════════════════════════════════════
+   PROTINUT™ PRODUCT DETAIL PAGE STYLES
+   ══════════════════════════════════════════════════════════════ */
+
+.product-detail-page-wrapper {
+  width: 100%;
+  background-color: #faf5ee;
+  color: #2b1810;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.detail-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Breadcrumb */
+.detail-breadcrumb-strip {
+  background: #fffcf8;
+  border-bottom: 1px solid #ebdcd0;
+  padding: 16px 0;
+}
+
+.breadcrumb-nav {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8c7a6e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.breadcrumb-nav a {
+  color: #ef5323;
+  text-decoration: none;
+}
+
+/* Main Hero Grid */
+.main-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  padding-top: 45px;
+  padding-bottom: 60px;
+  align-items: start;
+}
+
+/* Left Gallery Column */
+.detail-gallery-column {
+  position: sticky;
+  top: 90px;
+}
+
+.detail-main-image-stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  background: #ffffff;
+  border: 1.5px solid #ebdcd0;
+  border-radius: 28px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 40px rgba(43, 24, 16, 0.08);
+  margin-bottom: 16px;
+}
+
+.detail-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.detail-main-image-stage:hover .detail-hero-img {
+  transform: scale(1.04);
+}
+
+.detail-top-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: #ef5323;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 999px;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(239, 83, 35, 0.35);
+}
+
+.detail-thumbnails-row {
+  display: flex;
+  gap: 12px;
+}
+
+.thumbnail-btn {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid #ebdcd0;
+  border-radius: 16px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumbnail-btn img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.thumbnail-btn span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #55473e;
+}
+
+.thumbnail-btn.active {
+  border-color: #ef5323;
+  background: #fff8f5;
+}
+
+.thumbnail-btn.active span {
+  color: #ef5323;
+}
+
+/* Right Info Column */
+.detail-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.detail-header-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.detail-cat-pill {
+  background: #fff0e3;
+  color: #ef5323;
+  border: 1px solid #fed8b1;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.detail-veg-pill {
+  background: #e6f7ec;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.detail-product-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 3.2vw, 38px);
+  font-weight: 900;
+  color: #2b1810;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.detail-tagline {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #ef5323;
+  margin: 0;
+}
+
+/* Rating Jump Row */
+.detail-rating-jump-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.stars-cluster {
+  display: flex;
+  gap: 2px;
+}
+
+.star-jump {
+  color: #f59e0b;
+  font-size: 18px;
+}
+
+.rating-score-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  color: #2b1810;
+}
+
+.jump-to-reviews-link {
+  color: #ef5323;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 13.5px;
+}
+
+.jump-to-reviews-link:hover {
+  text-decoration: underline;
+}
+
+/* Pricing Box */
+.detail-pricing-box {
+  background: #ffffff;
+  border: 1.5px solid #ebdcd0;
+  border-radius: 18px;
+  padding: 18px 22px;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.current-price-big {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: #2b1810;
+  line-height: 1;
+}
+
+.original-price-strike {
+  font-size: 18px;
+  color: #9c8e84;
+  text-decoration: line-through;
+}
+
+.discount-pill-green {
+  background: #e6f7ec;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.tax-inclusive-note {
+  font-size: 12.5px;
+  color: #796659;
+}
+
+/* Weight Selector */
+.detail-weight-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #6a5a50;
+  letter-spacing: 0.05em;
+}
+
+.weight-buttons-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.weight-btn {
+  background: #ffffff;
+  border: 1.5px solid #ebdcd0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.weight-btn strong {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #2b1810;
+}
+
+.weight-btn small {
+  font-size: 12px;
+  color: #796659;
+}
+
+.weight-btn:hover {
+  border-color: #ef5323;
+}
+
+.weight-btn.active {
+  border-color: #ef5323;
+  background: #fff8f5;
+  box-shadow: 0 4px 12px rgba(239, 83, 35, 0.12);
+}
+
+.weight-btn.active strong {
+  color: #ef5323;
+}
+
+/* Description Text */
+.detail-description-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #55483e;
+  margin: 0;
+}
+
+/* Nutrients Mini Grid */
+.detail-nutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.nutrient-mini-pill {
+  background: #ffffff;
+  border: 1px solid #ebdcd0;
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.nutrient-mini-pill strong {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #ef5323;
+}
+
+.nutrient-mini-pill span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6a5a50;
+}
+
+/* Actions Panel */
+.detail-actions-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+}
+
+.detail-qty-control {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #ebdcd0;
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.detail-qty-control .qty-btn {
+  background: none;
+  border: none;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2b1810;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-qty-control .qty-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #2b1810;
+  min-width: 26px;
+  text-align: center;
+}
+
+.btn-detail-add-cart {
+  flex: 1;
+  min-width: 140px;
+  background: #ffffff;
+  border: 2px solid #ef5323;
+  color: #ef5323;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-detail-add-cart:hover {
+  background: #fff5eb;
+}
+
+.btn-detail-buy-now {
+  flex: 1;
+  min-width: 140px;
+  background: #ef5323;
+  border: none;
+  color: #ffffff;
+  padding: 15px 22px;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(239, 83, 35, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-detail-buy-now:hover {
+  background: #d4380d;
+  transform: translateY(-2px);
+}
+
+.btn-detail-wishlist {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid #ebdcd0;
+  background: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-detail-wishlist:hover {
+  border-color: #ef5323;
+  transform: scale(1.08);
+}
+
+.btn-detail-wishlist.active {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+/* Checklist */
+.detail-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #55473e;
+}
+
+.check-icon {
+  color: #15803d;
+  font-weight: 900;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .detail-gallery-column {
+    position: static;
+  }
+
+  .detail-main-image-stage {
+    height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .detail-main-image-stage {
+    height: 320px;
+  }
+
+  .weight-buttons-group {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-nutrients-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .detail-actions-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-detail-add-cart,
+  .btn-detail-buy-now {
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-detail-wishlist {
+    align-self: center;
+  }
+}

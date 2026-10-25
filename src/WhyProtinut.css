@@ -1,0 +1,278 @@
+/* ══════════════════════════════════════════════════════════════
+   WHY PROTINUT - CLEAN COMPARISON SECTION
+   ══════════════════════════════════════════════════════════════ */
+
+.why-protinut-section {
+  width: 100%;
+  background: #ffffff;
+  padding: 80px 24px 90px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #f2ece4;
+}
+
+.why-protinut-container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+/* Header */
+.why-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 50px;
+}
+
+.why-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ef5323;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.why-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 3.2vw, 38px);
+  color: #2b1811;
+  line-height: 1.2;
+  margin: 0 0 14px 0;
+}
+
+.why-title .highlight-orange {
+  color: #ef5323;
+}
+
+.why-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  color: #665b53;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Comparison Table */
+.comparison-table-wrap {
+  background: #fffdf9;
+  border: 1px solid #ede3d6;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(45, 25, 15, 0.05);
+  margin-bottom: 40px;
+}
+
+.comparison-table {
+  width: 100%;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.6fr 1.4fr;
+  padding: 18px 24px;
+  align-items: center;
+  border-bottom: 1px solid #f2e9dc;
+  transition: background-color 0.2s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:not(.table-header):hover {
+  background-color: #faf5ec;
+}
+
+/* Header Row */
+.table-header {
+  background: #281912;
+  color: #ffffff;
+  padding: 22px 24px;
+  border-bottom: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.col-feature {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  color: #3b2c24;
+}
+
+.table-header .col-feature {
+  color: #d8cbbe;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 12px;
+}
+
+.col-protinut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.table-header .col-protinut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo-tag {
+  color: #ef5323;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.tag-pure {
+  background: rgba(239, 83, 35, 0.2);
+  border: 1px solid rgba(239, 83, 35, 0.4);
+  color: #ff9166;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+}
+
+.col-others {
+  color: #7a6e66;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+}
+
+.table-header .col-others {
+  color: #a89a90;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 12px;
+}
+
+/* Status Badges */
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+}
+
+.status-item.good {
+  color: #14532d;
+  font-weight: 600;
+}
+
+.check-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.35);
+}
+
+.status-item.bad {
+  color: #881337;
+  font-weight: 500;
+}
+
+.cross-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f43f5e;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Guarantee Card */
+.guarantee-card {
+  background: radial-gradient(circle at 10% 50%, #fff7f2 0%, #faeee5 100%);
+  border: 1.5px dashed #f5c2b3;
+  border-radius: 20px;
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.guarantee-icon {
+  font-size: 38px;
+  flex-shrink: 0;
+}
+
+.guarantee-text {
+  flex: 1;
+}
+
+.guarantee-text strong {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #2b1811;
+  margin-bottom: 4px;
+}
+
+.guarantee-text p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  color: #665b53;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.btn-guarantee-shop {
+  padding: 12px 24px;
+  border-radius: 9999px;
+  background: #ef5323;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(239, 83, 35, 0.3);
+  transition: all 0.25s ease;
+}
+
+.btn-guarantee-shop:hover {
+  background: #d84515;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(239, 83, 35, 0.45);
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  .table-header {
+    display: none;
+  }
+  .col-feature {
+    font-size: 14.5px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #e8ded4;
+  }
+  .guarantee-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}

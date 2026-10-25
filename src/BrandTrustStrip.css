@@ -1,0 +1,367 @@
+/* ══════════════════════════════════════════════════════════════
+   BRAND TRUST STRIP — Stats Bar + Promo Offer Banner
+   Sits between OurRange and ClassicRange sections
+   ══════════════════════════════════════════════════════════════ */
+
+.brand-trust-strip-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   TOP: ANIMATED STATS BAR
+   ────────────────────────────────────────────────────────────── */
+
+.trust-stats-bar {
+  width: 100%;
+  background: linear-gradient(135deg, #1a0f0a 0%, #2d1811 40%, #3a2015 100%);
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative glow blobs */
+.trust-stats-bar::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239, 83, 35, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.trust-stats-bar::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -40px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239, 83, 35, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.trust-stats-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Individual stat */
+.trust-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  flex: 1 1 auto;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.trust-stat-item.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stat-icon {
+  font-size: 28px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(239, 83, 35, 0.3));
+}
+
+.stat-numbers {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stat-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 900;
+  color: #ef5323;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Vertical divider between stats */
+.stat-divider {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  margin: 0 4px;
+  align-self: center;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   BOTTOM: PROMO OFFER BANNER
+   ────────────────────────────────────────────────────────────── */
+
+.promo-offer-banner {
+  width: 100%;
+  background: linear-gradient(92deg, #fff8f4 0%, #fef3ec 50%, #fef0e6 100%);
+  border-top: 2px solid rgba(239, 83, 35, 0.12);
+  border-bottom: 2px solid rgba(239, 83, 35, 0.12);
+  padding: 18px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle decorative stripe */
+.promo-offer-banner::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, #ef5323 0%, #f97316 100%);
+}
+
+.promo-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Left: Offer text */
+.promo-offer-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.promo-flame {
+  font-size: 30px;
+  animation: flamePulse 1.6s ease-in-out infinite;
+  display: block;
+  line-height: 1;
+}
+
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1) rotate(-4deg); }
+  50% { transform: scale(1.15) rotate(4deg); }
+}
+
+.promo-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.promo-headline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  color: #ef5323;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.promo-subline {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #3a2a22;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.promo-subline strong {
+  color: #1a1410;
+  font-weight: 800;
+}
+
+.promo-code {
+  display: inline-block;
+  background: #ef5323;
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  position: relative;
+  top: -1px;
+  cursor: pointer;
+  user-select: all;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.promo-code:hover {
+  background: #d84515;
+  transform: scale(1.04);
+}
+
+/* Center: Quality badges */
+.promo-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.promo-quality-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid #f0e0d4;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a3a30;
+  box-shadow: 0 2px 6px rgba(239, 83, 35, 0.06);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.promo-quality-badge:hover {
+  border-color: #ef5323;
+  color: #ef5323;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(239, 83, 35, 0.14);
+}
+
+.badge-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Right: Shop Now CTA */
+.promo-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #ef5323 0%, #e84c17 100%);
+  color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 5px 16px rgba(239, 83, 35, 0.38);
+  transition: all 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.promo-shop-btn svg {
+  transition: transform 0.24s ease;
+}
+
+.promo-shop-btn:hover {
+  background: linear-gradient(135deg, #d84515 0%, #c4370c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(239, 83, 35, 0.5);
+}
+
+.promo-shop-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 992px) {
+  .trust-stats-inner {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .trust-stat-item {
+    min-width: 130px;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  .promo-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .promo-offer-banner::before {
+    width: 100%;
+    height: 4px;
+    top: 0;
+    left: 0;
+    bottom: auto;
+  }
+
+  .promo-offer-content {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .trust-stats-bar {
+    padding: 22px 16px;
+  }
+
+  .trust-stat-item {
+    min-width: 110px;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    font-size: 22px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .promo-offer-banner {
+    padding: 16px;
+  }
+
+  .promo-badges-row {
+    gap: 6px;
+  }
+
+  .promo-quality-badge {
+    font-size: 10.5px;
+    padding: 4px 9px;
+  }
+}

@@ -1,0 +1,125 @@
+/* ==========================================================
+   PROTINUT™ MOBILE BOTTOM NAVIGATION BAR
+   Native App-like Experience on Viewport < 768px
+   ========================================================== */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    background: #ffffff;
+    border-top: 1px solid #ebe4dc;
+    box-shadow: 0 -4px 20px rgba(43, 25, 17, 0.08);
+    z-index: 9990;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 6px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: #6e6157;
+    position: relative;
+    padding: 6px 2px 4px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bottom-nav-item:active {
+    transform: scale(0.92);
+  }
+
+  .bottom-nav-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-bottom: 2px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .bottom-nav-icon {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+  }
+
+  .bottom-nav-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+    white-space: nowrap;
+  }
+
+  /* Active State (PROTINUT Orange) */
+  .bottom-nav-item.active {
+    color: #f05023;
+  }
+
+  .bottom-nav-item.active .bottom-nav-icon {
+    transform: translateY(-1px) scale(1.08);
+    stroke: #f05023;
+  }
+
+  .bottom-nav-item.active .bottom-nav-label {
+    color: #f05023;
+    font-weight: 800;
+  }
+
+  .bottom-nav-active-dot {
+    position: absolute;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    background: #f05023;
+    border-radius: 50%;
+  }
+
+  /* Badge styling (Cart & Wishlist) */
+  .bottom-nav-badge {
+    position: absolute;
+    top: -4px;
+    right: -7px;
+    background: #f05023;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9.5px;
+    font-weight: 800;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(240, 80, 35, 0.4);
+    line-height: 1;
+  }
+}
+

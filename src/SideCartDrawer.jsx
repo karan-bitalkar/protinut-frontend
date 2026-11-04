@@ -267,6 +267,11 @@ const SideCartDrawer = ({
         aria-label="Side Checkout Drawer"
         role="dialog"
       >
+        {/* Mobile Bottom Sheet Pull Handle */}
+        <div className="mobile-sheet-drag-handle" aria-hidden="true">
+          <span className="mobile-sheet-drag-pill" />
+        </div>
+
         {/* Top Accent Bar */}
         <div className="drawer-top-bar" />
 

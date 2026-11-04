@@ -437,6 +437,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .desktop-only-action {
+    display: none !important;
+  }
+}
+
 @media (max-width: 600px) {
   .navbar-container {
     padding: 0 14px;
@@ -454,4 +460,87 @@
   .navbar-actions {
     gap: 10px;
   }
+}
+
+/* ── Expandable Search Bar on Navbar ── */
+.navbar-search-expanded-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.search-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon-inside {
+  position: absolute;
+  left: 12px;
+  color: #8c7b70;
+  pointer-events: none;
+}
+
+.navbar-search-expanded-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px 0 38px;
+  border-radius: 999px;
+  border: 1.5px solid #ef5323;
+  background: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  color: #1a1512;
+  outline: none;
+  box-shadow: 0 4px 14px rgba(239, 83, 35, 0.15);
+}
+
+.navbar-search-expanded-input:focus {
+  border-color: #ef5323;
+  box-shadow: 0 4px 18px rgba(239, 83, 35, 0.25);
+}
+
+.navbar-search-expanded-btn {
+  background: #ef5323;
+  color: #ffffff;
+  border: none;
+  padding: 0 16px;
+  height: 40px;
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.navbar-search-expanded-btn:hover {
+  background: #d84518;
+}
+
+.navbar-search-expanded-close {
+  background: #f0e6de;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #4a3b32;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.navbar-search-expanded-close:hover {
+  background: #e2d4cb;
+  color: #1a1512;
 }

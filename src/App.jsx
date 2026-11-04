@@ -12,6 +12,7 @@ import SideCartDrawer from './SideCartDrawer';
 import WishlistDrawer from './WishlistDrawer';
 import AuthModal from './AuthModal';
 import InvoiceModal from './InvoiceModal';
+import BottomNav from './BottomNav';
 import { initialWishlistProducts } from './wishlistData';
 
 // Pages
@@ -517,6 +518,21 @@ function AppContent() {
           toast.success(`Welcome, ${loggedInUser.name}!`);
         }}
       />
+
+      {/* Fixed Native Mobile Bottom Navigation Bar (< 768px) */}
+      {!hideHeaderFooter && (
+        <BottomNav
+          cartCount={totalCartCount}
+          wishlistCount={wishlistItems.length}
+          isAuthenticated={isAuthenticated}
+          onOpenCart={() => setIsCartOpen(true)}
+          onOpenLogin={() => {
+            setAuthModalMode('login');
+            setIsAuthOpen(true);
+          }}
+          isCartOpen={isCartOpen}
+        />
+      )}
 
     </div>
   );

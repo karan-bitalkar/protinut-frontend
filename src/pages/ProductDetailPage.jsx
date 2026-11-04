@@ -106,17 +106,20 @@ const ProductDetailPage = ({
   };
 
   const handleBuyNowClick = () => {
-    const success = onAddToCart && onAddToCart({
-      id: product.id,
-      name: product.name,
-      selectedWeight: selectedWeight,
-      finalPrice: currentPrice,
-      quantity: quantity,
-      image: product.image
+    // Pass directly to checkout as a direct purchase without altering persistent cart
+    navigate('/checkout', {
+      state: {
+        buyNowItem: {
+          id: product.id,
+          name: product.name,
+          selectedWeight: selectedWeight,
+          originalPrice: originalPrice,
+          finalPrice: currentPrice,
+          quantity: quantity,
+          image: product.image
+        }
+      }
     });
-    if (success !== false) {
-      navigate('/cart');
-    }
   };
 
   return (

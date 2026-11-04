@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../CartContext';
 import { useOrders } from '../OrderContext';
 import { useAuth } from '../AuthContext';
@@ -30,6 +30,24 @@ const CheckoutPage = () => {
   const { placeOrder } = useOrders();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Buy Now direct purchase support (does not modify persistent cart)
+  const buyNowItem = location.state?.buyNowItem;
+  const activeItems = buyNowItem ? [buyNowItem] : cartItems;
+  const activeCount = buyNowItem ? (buyNowItem.quantity || 1) : totalCartCount;
+  const activeSubtotal = buyNowItem 
+    ? (buyNowItem.finalPrice * (buyNowItem.quantity || 1))
+    : subtotal;
+  const activeOriginalPriceTotal = buyNowItem
+    ? ((buyNowItem.originalPrice || Math.round(buyNowItem.finalPrice * 1.35)) * (buyNowItem.quantity || 1))
+    : originalPriceTotal;
+  const activeDiscount = Math.max(0, activeOriginalPriceTotal - activeSubtotal);
+  const activeCgst = buyNowItem ? Math.round(activeSubtotal * 0.025) : cgst;
+  const activeSgst = buyNowItem ? Math.round(activeSubtotal * 0.025) : sgst;
+  const activeTotalGst = activeCgst + activeSgst;
+  const activeDeliveryCharge = (activeSubtotal > 499 || activeItems.length === 0) ? 0 : 40;
+  const activeGrandTotal = activeItems.length > 0 ? (activeSubtotal + activeDeliveryCharge + activeTotalGst) : 0;
 
   // Scroll to top on mount
   useEffect(() => {
@@ -104,8 +122,8 @@ const CheckoutPage = () => {
   };
 
   const handlePlaceOrder = () => {
-    if (cartItems.length === 0) {
-      toast.error('Your cart is empty!');
+    if (activeItems.length === 0) {
+      toast.error('No items to checkout!');
       navigate('/products');
       return;
     }
@@ -130,20 +148,23 @@ const CheckoutPage = () => {
 
     setTimeout(() => {
       const order = placeOrder({
-        items: cartItems,
+        items: activeItems,
         address,
         paymentMethod: paymentLabel,
-        subtotal,
-        discount,
-        cgst,
-        sgst,
-        totalGst,
-        deliveryCharge,
-        grandTotal,
+        subtotal: activeSubtotal,
+        discount: activeDiscount,
+        cgst: activeCgst,
+        sgst: activeSgst,
+        totalGst: activeTotalGst,
+        deliveryCharge: activeDeliveryCharge,
+        grandTotal: activeGrandTotal,
         userEmail: user?.email || user?.identifier || 'customer@protinut.in'
       });
 
-      clearCart();
+      // Only clear cart if this was a cart checkout (do not wipe cart on direct Buy Now purchase)
+      if (!buyNowItem) {
+        clearCart();
+      }
       setIsPlacingOrder(false);
       setPlacedOrder(order);
       toast.success('🎉 Order Placed Successfully!');
@@ -231,8 +252,8 @@ const CheckoutPage = () => {
     );
   }
 
-  // If cart is empty, show empty state
-  if (cartItems.length === 0) {
+  // If cart is empty and not Buy Now, show empty state
+  if (activeItems.length === 0) {
     return (
       <div className="min-h-screen bg-[#f1f3f6] py-16 px-4 text-center">
         <div className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
@@ -481,16 +502,18 @@ const CheckoutPage = () => {
                     ✓
                   </span>
                   <span className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-                    Order Items Summary ({totalCartCount} {totalCartCount === 1 ? 'Jar' : 'Jars'})
+                    Order Items Summary ({activeCount} {activeCount === 1 ? 'Jar' : 'Jars'})
                   </span>
                 </div>
-                <Link to="/cart" className="text-xs font-bold text-primary hover:underline">
-                  Modify Cart
-                </Link>
+                {!buyNowItem && (
+                  <Link to="/cart" className="text-xs font-bold text-primary hover:underline">
+                    Modify Cart
+                  </Link>
+                )}
               </div>
 
               <div className="p-4 divide-y divide-gray-100">
-                {cartItems.map((item) => (
+                {activeItems.map((item) => (
                   <div key={`${item.id}-${item.selectedWeight}`} className="py-3 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-amber-50 rounded-lg p-1 flex items-center justify-center border border-amber-100 flex-shrink-0">
@@ -753,24 +776,24 @@ const CheckoutPage = () => {
                 {/* Price (Subtotal) */}
                 <div className="flex items-center justify-between text-gray-800">
                   <span>Price (Subtotal)</span>
-                  <span className="font-semibold">₹{subtotal}</span>
+                  <span className="font-semibold">₹{activeSubtotal}</span>
                 </div>
 
                 {/* Discount */}
                 <div className="flex items-center justify-between text-gray-800">
                   <span>Discount</span>
-                  <span className="font-bold text-green-600">− ₹{discount}</span>
+                  <span className="font-bold text-green-600">− ₹{activeDiscount}</span>
                 </div>
 
                 {/* Delivery Charges */}
                 <div className="flex items-center justify-between text-gray-800">
                   <span>Delivery Charges</span>
-                  {deliveryCharge === 0 ? (
+                  {activeDeliveryCharge === 0 ? (
                     <span className="font-bold text-green-600 uppercase">
                       <span className="line-through text-gray-400 font-normal mr-1">₹40</span> Free
                     </span>
                   ) : (
-                    <span className="font-semibold text-gray-900">₹{deliveryCharge}</span>
+                    <span className="font-semibold text-gray-900">₹{activeDeliveryCharge}</span>
                   )}
                 </div>
 
@@ -782,7 +805,7 @@ const CheckoutPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold text-gray-900">₹{cgst}</span>
+                  <span className="font-semibold text-gray-900">₹{activeCgst}</span>
                 </div>
 
                 {/* SGST (2.5%) */}
@@ -793,21 +816,21 @@ const CheckoutPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold text-gray-900">₹{sgst}</span>
+                  <span className="font-semibold text-gray-900">₹{activeSgst}</span>
                 </div>
 
                 {/* Total Amount */}
                 <div className="flex items-center justify-between text-base sm:text-lg font-black text-gray-900 pt-3 border-t border-gray-200 border-dashed font-['Montserrat']">
                   <span>Total Amount</span>
-                  <span className="text-primary text-xl">₹{grandTotal}</span>
+                  <span className="text-primary text-xl">₹{activeGrandTotal}</span>
                 </div>
               </div>
 
               {/* Savings Banner */}
-              {discount > 0 && (
+              {activeDiscount > 0 && (
                 <div className="bg-green-50 px-5 py-3 border-t border-green-200 text-xs font-bold text-green-800 flex items-center gap-2">
                   <span>🎉</span>
-                  <span>You are saving ₹{discount} on this order!</span>
+                  <span>You are saving ₹{activeDiscount} on this order!</span>
                 </div>
               )}
 

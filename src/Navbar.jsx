@@ -57,22 +57,8 @@ const Navbar = ({
   };
 
   const handleCartClick = () => {
-    if (!isAuthenticated) {
-      toast.error('Please login to view your cart', {
-        id: 'nav-cart-auth-toast',
-        duration: 3500,
-        style: {
-          background: '#2b1810',
-          color: '#ffffff',
-          borderRadius: '12px',
-          border: '1.5px solid #ef5323',
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: '13px',
-          fontWeight: 700
-        }
-      });
-      if (onOpenLogin) { onOpenLogin(); return; }
-      navigate('/login?redirect=/cart');
+    if (onOpenCart) {
+      onOpenCart();
     } else {
       navigate('/cart');
     }
@@ -277,34 +263,6 @@ const Navbar = ({
                     <span className="count-badge">{wishlistCount}</span>
                   )}
                 </button>
-
-                {/* Shopping Cart Button (Only shown when logged in) */}
-                <button
-                  type="button"
-                  className="action-btn badge-btn"
-                  onClick={handleCartClick}
-                  aria-label={`Open Cart (${cartCount} items)`}
-                  title={`View Cart (${cartCount} items)`}
-                >
-                  <svg
-                    className="action-icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="9" cy="21" r="1.5" />
-                    <circle cx="19" cy="21" r="1.5" />
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                  </svg>
-                  {cartCount > 0 && (
-                    <span className="count-badge">{cartCount}</span>
-                  )}
-                </button>
               </>
             ) : (
               /* If NOT logged in, show Login button that opens modal */
@@ -321,6 +279,34 @@ const Navbar = ({
                 <span>Login</span>
               </button>
             )}
+
+            {/* Shopping Cart Button (Always visible in Header - opens Cart Drawer) */}
+            <button
+              type="button"
+              className="action-btn badge-btn"
+              onClick={handleCartClick}
+              aria-label={`Open Cart (${cartCount} items)`}
+              title={`View Cart (${cartCount} items)`}
+            >
+              <svg
+                className="action-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="9" cy="21" r="1.5" />
+                <circle cx="19" cy="21" r="1.5" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              {cartCount > 0 && (
+                <span className="count-badge">{cartCount}</span>
+              )}
+            </button>
 
             {/* SHOP NOW -> Pill Button */}
             <Link to="/products" className="btn-shop-now">

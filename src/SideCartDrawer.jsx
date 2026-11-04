@@ -87,25 +87,8 @@ const SideCartDrawer = ({
     };
   }, [isOpen]);
 
-  // Items to display
-  const displayItems = cartItems.length > 0 ? cartItems : [
-    {
-      id: 'classy-crunch',
-      name: 'Peanut Butter Classy Crunch',
-      selectedWeight: '550gm',
-      finalPrice: 250,
-      quantity: 1,
-      image: '/products/classy-crunch.png',
-    },
-    {
-      id: 'choco-crunch',
-      name: 'Peanut Butter Choco Crunch',
-      selectedWeight: '550gm',
-      finalPrice: 270,
-      quantity: 1,
-      image: '/products/choco-crunch.png',
-    }
-  ];
+  // Items to display strictly from active Cart state
+  const displayItems = cartItems;
 
   const totalItemsCount = displayItems.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = displayItems.reduce((acc, item) => acc + item.finalPrice * item.quantity, 0);
@@ -292,8 +275,10 @@ const SideCartDrawer = ({
           <div className="cart-title-group">
             {currentStep === 'cart' ? (
               <>
-                <h2 className="cart-heading">My Cart ({totalItemsCount} Items)</h2>
-                <span className="cart-limit-pill">Limit: {totalItemsCount}/{MAX_CART_LIMIT} max</span>
+                <h2 className="cart-heading">My Cart ({totalItemsCount} {totalItemsCount === 1 ? 'Item' : 'Items'})</h2>
+                {totalItemsCount > 0 && (
+                  <span className="cart-limit-pill">Limit: {totalItemsCount}/{MAX_CART_LIMIT} max</span>
+                )}
               </>
             ) : currentStep === 'success' ? (
               <h2 className="cart-heading">Order Placed 🎉</h2>
@@ -354,9 +339,26 @@ const SideCartDrawer = ({
               STEP 0: CART (Reference Image Exact Match)
              ======================================================== */}
           {currentStep === 'cart' && (
-            <>
-              {/* Product Cart Cards */}
-              <div className="cart-cards-list">
+            displayItems.length === 0 ? (
+              <div className="cart-empty-view">
+                <div className="empty-jar-icon">🛒</div>
+                <h3 className="cart-heading" style={{ marginBottom: '8px', fontSize: '18px' }}>Your Cart is Empty</h3>
+                <p style={{ fontSize: '13px', color: '#666', marginBottom: '20px' }}>
+                  Looks like you haven't added anything to your cart yet.
+                </p>
+                <button
+                  type="button"
+                  className="btn-proceed-checkout"
+                  onClick={onClose}
+                  style={{ width: 'auto', padding: '10px 24px', display: 'inline-block' }}
+                >
+                  Shop Now →
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Product Cart Cards */}
+                <div className="cart-cards-list">
                 {displayItems.map((item) => {
                   const isMax = totalItemsCount >= MAX_CART_LIMIT;
                   return (
@@ -485,6 +487,7 @@ const SideCartDrawer = ({
                 </button>
               </div>
             </>
+            )
           )}
 
           {/* ========================================================

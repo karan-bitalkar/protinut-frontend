@@ -55,14 +55,15 @@ export const CartProvider = ({ children }) => {
     const currentTotal = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     if (currentTotal + quantity > MAX_CART_LIMIT) {
       toast.error(`⚠️ Cart Limit Reached! Maximum limit is ${MAX_CART_LIMIT} jars.`, {
-        duration: 3500,
+        duration: 2500,
         style: {
-          background: '#991b1b',
+          background: '#dc2626',
           color: '#ffffff',
-          borderRadius: '12px',
+          borderRadius: '10px',
           fontFamily: "'Montserrat', sans-serif",
           fontSize: '13px',
-          fontWeight: 700
+          fontWeight: 700,
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)'
         }
       });
       return false;
@@ -92,14 +93,18 @@ export const CartProvider = ({ children }) => {
       ];
     });
 
-    toast.success(`✓ Added to Cart! (${currentTotal + quantity}/${MAX_CART_LIMIT})`, {
+    const itemLabel = product.name ? `${product.name} (${weight})` : 'Item';
+    toast.success(`${itemLabel} added to cart!`, {
+      duration: 2500,
+      icon: '✅',
       style: {
-        background: '#15803d',
+        background: '#16a34a',
         color: '#ffffff',
-        borderRadius: '12px',
+        borderRadius: '10px',
         fontFamily: "'Montserrat', sans-serif",
         fontSize: '13px',
-        fontWeight: 700
+        fontWeight: 700,
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)'
       }
     });
 
@@ -115,13 +120,15 @@ export const CartProvider = ({ children }) => {
 
     if (diff > 0 && currentTotal + diff > MAX_CART_LIMIT) {
       toast.error(`⚠️ Maximum limit of ${MAX_CART_LIMIT} jars reached!`, {
+        duration: 2500,
         style: {
-          background: '#991b1b',
+          background: '#dc2626',
           color: '#ffffff',
-          borderRadius: '12px',
+          borderRadius: '10px',
           fontFamily: "'Montserrat', sans-serif",
           fontSize: '13px',
-          fontWeight: 700
+          fontWeight: 700,
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)'
         }
       });
       return;
@@ -142,22 +149,47 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeItem = (productId, selectedWeight) => {
-    setCartItems((prev) =>
-      prev.filter((i) => !(i.id === productId && i.selectedWeight === selectedWeight))
+    const itemToRemove = cartItems.find(
+      (i) => i.id === productId && (!selectedWeight || i.selectedWeight === selectedWeight)
     );
-    toast('Item removed from cart', {
+    const itemName = itemToRemove ? `${itemToRemove.name} removed from cart.` : 'Item removed from cart.';
+
+    setCartItems((prev) =>
+      prev.filter((i) => !(i.id === productId && (selectedWeight ? i.selectedWeight === selectedWeight : true)))
+    );
+
+    toast.error(itemName, {
+      duration: 2500,
       icon: '🗑️',
       style: {
-        background: '#2b1810',
+        background: '#dc2626',
         color: '#ffffff',
-        borderRadius: '12px',
-        fontSize: '13px'
+        borderRadius: '10px',
+        fontFamily: "'Montserrat', sans-serif",
+        fontSize: '13px',
+        fontWeight: 700,
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)'
       }
     });
   };
 
   const clearCart = () => {
-    setCartItems([]);
+    if (cartItems.length > 0) {
+      setCartItems([]);
+      toast.error('All items removed from cart.', {
+        duration: 2500,
+        icon: '🗑️',
+        style: {
+          background: '#dc2626',
+          color: '#ffffff',
+          borderRadius: '10px',
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: '13px',
+          fontWeight: 700,
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15)'
+        }
+      });
+    }
   };
 
   // Reset cart for testing / clean login

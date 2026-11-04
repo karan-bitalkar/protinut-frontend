@@ -181,32 +181,12 @@ function AppContent() {
     setWishlistItems([]);
   };
 
-  // ── Add to Cart (Requires Login + Strict 5-product limit check) ──
+  // ── Add to Cart (Allows browsing & adding to cart seamlessly, updates toast, stays on page) ──
   const handleAddToCart = (product) => {
-    if (!isAuthenticated) {
-      toast.error('Please login to add items to cart', {
-        id: 'auth-cart-action-toast',
-        duration: 3500,
-        style: {
-          background: '#2b1810',
-          color: '#ffffff',
-          borderRadius: '12px',
-          border: '1.5px solid #ef5323',
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: '13px',
-          fontWeight: 700
-        }
-      });
-      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
-      return false;
-    }
-
     const qty = product.quantity || 1;
     const weight = product.selectedWeight || '550gm';
     const success = contextAddToCart(product, qty, weight);
-    if (success) {
-      setIsCartOpen(true);
-    }
+    // User stays on the product page with instant 2.5s Toast feedback (like Flipkart)
     return success;
   };
 
@@ -221,8 +201,50 @@ function AppContent() {
   return (
     <div className="app-container">
       
-      {/* Toast Notification Provider */}
-      <Toaster position="bottom-right" reverseOrder={false} />
+      {/* Toast Notification Provider (Top Right / Top Center Flipkart Style) */}
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        gutter={10}
+        containerStyle={{
+          top: 24,
+          right: 24,
+          zIndex: 999999
+        }}
+        toastOptions={{
+          duration: 2500,
+          style: {
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '13px',
+            fontWeight: 700,
+            padding: '12px 18px',
+            borderRadius: '10px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.1)'
+          },
+          success: {
+            duration: 2500,
+            style: {
+              background: '#16a34a',
+              color: '#ffffff'
+            },
+            iconTheme: {
+              primary: '#ffffff',
+              secondary: '#16a34a'
+            }
+          },
+          error: {
+            duration: 2500,
+            style: {
+              background: '#dc2626',
+              color: '#ffffff'
+            },
+            iconTheme: {
+              primary: '#ffffff',
+              secondary: '#dc2626'
+            }
+          }
+        }}
+      />
 
       {/* Navigation Bar — hidden on full-page auth and admin routes */}
       {!hideHeaderFooter && (

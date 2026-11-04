@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useOrders, defaultSampleOrder } from '../OrderContext';
+import { useOrders } from '../OrderContext';
 import { useAuth } from '../AuthContext';
 import InvoiceModal from '../InvoiceModal';
 import CancelOrderModal from '../CancelOrderModal';
@@ -59,13 +59,15 @@ const OrdersPage = () => {
             </p>
           </div>
           <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => setSelectedInvoiceOrder(orders[0] || defaultSampleOrder)}
-              className="inline-flex items-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-[#ea580c] border border-orange-300 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm transition"
-            >
-              <span>🧾 Tax Invoice</span>
-            </button>
+            {orders.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setSelectedInvoiceOrder(orders[0])}
+                className="inline-flex items-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-[#ea580c] border border-orange-300 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm transition"
+              >
+                <span>🧾 Tax Invoice</span>
+              </button>
+            )}
             <Link
               to="/products"
               className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg shadow transition"

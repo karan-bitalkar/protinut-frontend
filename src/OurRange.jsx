@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import './OurRange.css';
 
 const allProductsData = [
@@ -251,7 +252,6 @@ const OurRange = ({
     'combo-athlete-trio': '550gm x 3'
   });
   const [addedIds, setAddedIds] = useState({});
-  const [toastMessage, setToastMessage] = useState(null);
 
   const toggleWeight = (productId, weightOptionId) => {
     setSelectedWeights((prev) => ({ ...prev, [productId]: weightOptionId }));
@@ -262,8 +262,10 @@ const OurRange = ({
       if (onQuickView) {
         onQuickView({ ...product, isAvailable: false });
       } else {
-        setToastMessage(`We will notify you when ${product.name} is available!`);
-        setTimeout(() => setToastMessage(null), 2500);
+        toast(`We will notify you when ${product.name} is available!`, {
+          icon: '🔔',
+          duration: 2500
+        });
       }
       return;
     }
@@ -282,9 +284,6 @@ const OurRange = ({
       });
     }
 
-    setToastMessage(`${product.name} (${matchedOption.label}) added to cart!`);
-
-    setTimeout(() => setToastMessage(null), 2500);
     setTimeout(() => {
       setAddedIds((prev) => ({ ...prev, [product.id]: false }));
     }, 1800);
@@ -642,14 +641,6 @@ const OurRange = ({
         )}
 
       </div>
-
-      {/* Interactive Toast Notification */}
-      {toastMessage && (
-        <div className="range-toast-alert" role="status">
-          <span className="toast-dot" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
     </section>
   );
 };

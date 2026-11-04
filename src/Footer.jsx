@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-import logoImg from './assets/protinut-logo.png';
+import logoImg from './assets/protinut-logo.png'; // Make sure path is correct
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -51,7 +51,7 @@ const Footer = () => {
       {/* Main Footer Links */}
       <div className="footer-main-container">
         <div className="footer-grid">
-          
+
           {/* Brand Col */}
           <div className="footer-col brand-col">
             <Link to="/">
@@ -95,28 +95,28 @@ const Footer = () => {
 
           {/* Contact & Hours */}
           <div className="footer-col contact-col">
-            <h4>Customer Support</h4>
-            <p>📍 Dharashiv, Maharashtra, India</p>
-            <p>📧 support@protinut.in</p>
-            <p>📞 +91 98765 43210 (Mon - Sat, 9am - 7pm)</p>
+            <h4 className="font-bold text-lg mb-2">Customer Support</h4>
+            <p className="text-sm text-gray-600">📍 PROTINUT FOODS<br />Laxmi Niwas, Vidya Nagar, Dharashiv (Gramin), Dharashiv Taluka, Dharashiv, Maharashtra - 413501</p>
+            <p className="text-sm text-gray-600">📧 <a href="mailto:protinut.in@gmail.com" className="underline hover:text-primary">protinut.in@gmail.com</a></p>
+            <p className="text-sm text-gray-600">📞 <a href="tel:+918308302301" className="underline hover:text-primary">+91 830 830 2301</a></p>
+            <p className="text-sm font-bold text-gray-800 mt-1">GSTIN: 27PRRPS9570L1Z6</p>
             <div className="fssai-stamp">
-              <span>Lic No. 10020021000123</span>
-              <small>FSSAI Food Safety Certified</small>
+              <span>FSSAI No: 21526050000128</span>
             </div>
           </div>
 
         </div>
+      </div>
 
-        {/* Bottom Copyright */}
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} PROTINUT™ Nutrition. All rights reserved. Made with ❤️ in Dharashiv, Maharashtra.</p>
-          <div className="footer-legal">
-            <Link to="/about">About Brand</Link>
-            <span>•</span>
-            <Link to="/contact">Support</Link>
-            <span>•</span>
-            <Link to="/products">Catalogue</Link>
-          </div>
+      {/* Bottom Copyright */}
+      <div className="footer-bottom">
+        <p>© {new Date().getFullYear()} PROTINUT™ Nutrition. All rights reserved. Made with ❤️ in Dharashiv, Maharashtra.</p>
+        <div className="footer-legal">
+          <Link to="/about">About Brand</Link>
+          <span>•</span>
+          <Link to="/contact">Support</Link>
+          <span>•</span>
+          <Link to="/products">Catalogue</Link>
         </div>
       </div>
     </footer>

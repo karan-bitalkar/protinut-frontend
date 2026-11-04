@@ -6,45 +6,9 @@ import './HeroCarousel.css';
 // Just keep adding: { src: '/hero-slides/slide-XX.png', alt: '...' }
 // ─────────────────────────────────────────────
 const slides = [
-  { src: '/hero-slides/slide-01.png', alt: 'Protinut - Fuel Your Day, Power Your Way' },
-  { src: '/hero-slides/slide-02.png', alt: 'Classy Crunch Goodness - Shop Now' },
-  { src: '/hero-slides/slide-03.png', alt: 'Nutrition For A Stronger You' },
-  { src: '/hero-slides/slide-04.png', alt: 'Chocolate Meets Nutrition - Choco Crunch' },
-  { src: '/hero-slides/slide-05.png', alt: 'Make Your Breakfast Healthy & Tasty' },
-  // ── BATCH 2 ──
-  { src: '/hero-slides/slide-06.png', alt: 'Simple Ingredients. Big Nutrition.' },
-  { src: '/hero-slides/slide-07.png', alt: 'Choco Crunch Peanut Butter - Try Now' },
-  { src: '/hero-slides/slide-08.png', alt: 'Real Ingredients. Real Results.' },
-  { src: '/hero-slides/slide-09.png', alt: 'Two Delicious Flavours. One Healthy Choice.' },
-  { src: '/hero-slides/slide-10.png', alt: 'Classy Crunch - Classic Taste with a Healthy Twist' },
-  // ── BATCH 3 ──
-  { src: '/hero-slides/slide-11.png', alt: 'Nutrition For A Stronger You - Take It Anywhere' },
-  { src: '/hero-slides/slide-12.png', alt: 'Rich Chocolate. Real Peanuts. Real Goodness.' },
-  { src: '/hero-slides/slide-13.png', alt: 'Two Flavours. One Healthy Lifestyle.' },
-  { src: '/hero-slides/slide-14.png', alt: 'Classic Taste. Crunchy Delight.' },
-  { src: '/hero-slides/slide-15.png', alt: 'Your Adventure Snack - Anytime Anywhere' },
-  // ── BATCH 4 ──
   { src: '/hero-slides/slide-16.png', alt: 'Make Your Breakfast Healthy & Tasty - Fresh Bowl' },
-  // ── BATCH 5 ──
-  { src: '/hero-slides/slide-17.png', alt: 'Simple Ingredients. Big Nutrition.' },
-  { src: '/hero-slides/slide-18.png', alt: 'Classy Crunch - Classic Taste With a Real Crunch!' },
-  { src: '/hero-slides/slide-19.png', alt: 'Make Your Breakfast Healthy & Tasty - Pink Berry Bowl' },
-  { src: '/hero-slides/slide-20.png', alt: 'Nutrition For A Stronger You - Discover More' },
-  { src: '/hero-slides/slide-21.png', alt: 'Choco Crunch - The Perfect Blend of Peanuts & Chocolate' },
-  // ── BATCH 6 ──
-  { src: '/hero-slides/slide-22.png', alt: 'The Perfect Blend of Peanuts & Chocolate' },
-  { src: '/hero-slides/slide-23.png', alt: 'Classic Taste, Real Nutrition - Taste the Goodness' },
-  { src: '/hero-slides/slide-24.png', alt: 'Make Your Breakfast Healthy & Tasty - Explore Recipes' },
-  { src: '/hero-slides/slide-25.png', alt: 'Nutrition For A Stronger You - Choose Protinut' },
-  { src: '/hero-slides/slide-26.png', alt: '100% Natural Nutrition - Pure Peanuts. No Preservatives.' },
-  // ── BATCH 7 ──
-  { src: '/hero-slides/slide-27.png', alt: 'Fuel Your Day, Power Your Way - Classy Crunch 550g' },
   { src: '/hero-slides/slide-28.png', alt: 'Fuel Your Day, Power Your Way - Shop Now Both Jars' },
-  { src: '/hero-slides/slide-29.jpg', alt: 'Fuel Your Fitness - Choco Crunch Gym Edition' },
   { src: '/hero-slides/slide-30.png', alt: 'Real Peanuts. Real Nutrition. - Explore Products' },
-  { src: '/hero-slides/slide-31.png', alt: 'Fuel Your Day, Power Your Way - 20g+ Protein per serving' },
-  // ── FINAL SLIDE ──
-  { src: '/hero-slides/slide-32.jpg', alt: 'Two Irresistible Crunches - Same Natural Goodness' },
 ];
 
 const AUTO_PLAY_INTERVAL = 3500; // ms (Flipkart uses ~3.5s)

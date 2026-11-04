@@ -42,7 +42,7 @@ const WishlistPage = ({
               </div>
             </div>
 
-            <h2 className="empty-wishlist-heading">Your wishlist is empty</h2>
+            <h2 className="empty-wishlist-heading">Your Wishlist is Empty</h2>
             <p className="empty-wishlist-message">
               Your wishlist is empty. Tap the heart icon on any product to save it for later.
             </p>
@@ -53,8 +53,9 @@ const WishlistPage = ({
               <span>🚫 Zero Palm Oil</span>
             </div>
 
-            <Link to="/products" className="btn-discover-products">
-              Discover Products →
+            <Link to="/products" className="btn-discover-products" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px', background: '#ef5323', color: '#ffffff', borderRadius: '12px', fontWeight: 800, textDecoration: 'none', boxShadow: '0 4px 14px rgba(239,83,35,0.3)' }}>
+              <span>Shop Now</span>
+              <span>→</span>
             </Link>
           </div>
         ) : (

@@ -1,50 +1,29 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import AuthModal from '../AuthModal';
-import { useAuth } from '../AuthContext';
-import toast from 'react-hot-toast';
-import './Pages.css';
 
-const LoginPage = ({ onLoginSuccess }) => {
+/**
+ * LoginPage – Renders the centered AuthModal popup dialog
+ * Ensures users always see the sleek popup modal even if navigating directly to /login
+ */
+const LoginPage = ({ onLoginSuccess, initialMode = 'login' }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useAuth();
-
   const redirectUrl = searchParams.get('redirect') || '/';
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
-
-  const handleSuccessfulAuth = (loggedInUser) => {
-    const userObj = login(loggedInUser);
-    if (onLoginSuccess) {
-      onLoginSuccess(userObj);
-    }
-    toast.success(`Welcome, ${userObj.name}!`, {
-      id: 'auth-success-toast',
-      duration: 3500,
-      style: {
-        background: '#15803d',
-        color: '#ffffff',
-        borderRadius: '12px',
-        fontFamily: "'Montserrat', sans-serif",
-        fontSize: '13px',
-        fontWeight: 700
-      }
-    });
-    navigate(redirectUrl, { replace: true });
-  };
+  const modeQuery = searchParams.get('mode');
+  const mode = modeQuery === 'register' || modeQuery === 'signup' ? 'register' : initialMode;
 
   return (
-    <div className="login-standalone-page" style={{ minHeight: '80vh', padding: '60px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fdf9f4' }}>
-      <div style={{ width: '100%', maxWidth: '860px' }}>
-        <AuthModal
-          isOpen={true}
-          onClose={() => navigate('/')}
-          onLoginSuccess={handleSuccessfulAuth}
-        />
-      </div>
+    <div style={{ position: 'relative', minHeight: '100vh', background: '#faf5ee' }}>
+      <AuthModal
+        isOpen={true}
+        defaultMode={mode}
+        onClose={() => navigate(redirectUrl || '/')}
+        onLoginSuccess={(user) => {
+          if (onLoginSuccess) onLoginSuccess(user);
+          navigate(redirectUrl, { replace: true });
+        }}
+      />
     </div>
   );
 };

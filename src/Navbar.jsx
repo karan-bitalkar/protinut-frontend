@@ -49,6 +49,7 @@ const Navbar = ({
           fontWeight: 700
         }
       });
+      if (onOpenLogin) { onOpenLogin(); return; }
       navigate('/login?redirect=/wishlist');
     } else {
       navigate('/wishlist');
@@ -70,6 +71,7 @@ const Navbar = ({
           fontWeight: 700
         }
       });
+      if (onOpenLogin) { onOpenLogin(); return; }
       navigate('/login?redirect=/cart');
     } else {
       navigate('/cart');
@@ -78,6 +80,7 @@ const Navbar = ({
 
   const handleAccountClick = () => {
     if (!isAuthenticated) {
+      if (onOpenLogin) { onOpenLogin(); return; }
       navigate('/login?redirect=/account');
     } else {
       navigate('/account');
@@ -86,20 +89,24 @@ const Navbar = ({
 
   const handleLogoutAction = () => {
     setUserMenuOpen(false);
-    logout();
-    if (onLogout) onLogout();
-    toast.success('Logged out successfully', {
-      duration: 3000,
-      style: {
-        background: '#15803d',
-        color: '#ffffff',
-        borderRadius: '12px',
-        fontFamily: "'Montserrat', sans-serif",
-        fontSize: '13px',
-        fontWeight: 700
-      }
-    });
-    navigate('/');
+    if (onLogout) {
+      onLogout();
+    } else {
+      logout();
+      if (onOpenLogin) onOpenLogin();
+      toast.success('Logged out successfully', {
+        duration: 3000,
+        style: {
+          background: '#15803d',
+          color: '#ffffff',
+          borderRadius: '12px',
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: '13px',
+          fontWeight: 700
+        }
+      });
+      navigate('/');
+    }
   };
 
   return (
@@ -152,164 +159,178 @@ const Navbar = ({
               </svg>
             </button>
 
-            {/* User Profile / Account Area */}
+            {/* User Profile / Account Area & Protected Actions */}
             {isAuthenticated && user ? (
-              <div className="nav-user-menu-wrap">
+              <>
+                <div className="nav-user-menu-wrap">
+                  <button
+                    type="button"
+                    className="nav-user-pill-btn"
+                    onClick={() => setUserMenuOpen((prev) => !prev)}
+                    aria-label={`User account menu for ${user.name}`}
+                    title={`Signed in as ${user.name}`}
+                  >
+                    <span className="user-avatar-initial">
+                      {user.name.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="user-pill-name">{user.name.split(' ')[0]}</span>
+                    <svg className="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {userMenuOpen && (
+                    <div className="nav-user-dropdown" role="menu">
+                      <div className="dropdown-header">
+                        <strong>{user.name}</strong>
+                        <small>{user.email || user.identifier || 'PROTINUT Member'}</small>
+                      </div>
+                      <div className="dropdown-divider" />
+                      <button
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          navigate('/account');
+                        }}
+                      >
+                        👤 My Account
+                      </button>
+                      <button
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          navigate('/orders');
+                        }}
+                      >
+                        📦 My Orders
+                      </button>
+                      <button
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          navigate('/cart');
+                        }}
+                      >
+                        🛍️ My Cart ({cartCount} items)
+                      </button>
+                      <button
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          navigate('/orders?invoice=latest');
+                        }}
+                      >
+                        🧾 Tax Invoice
+                      </button>
+                      <button
+                        type="button"
+                        className="dropdown-item"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          navigate('/wishlist');
+                        }}
+                      >
+                        ❤️ My Wishlist ({wishlistCount} items)
+                      </button>
+                      {user?.role === 'ROLE_ADMIN' && (
+                        <button
+                          type="button"
+                          className="dropdown-item"
+                          style={{ color: '#ef5323', fontWeight: 800 }}
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            navigate('/admin/dashboard');
+                          }}
+                        >
+                          🛡️ Admin Panel
+                        </button>
+                      )}
+                      <div className="dropdown-divider" />
+                      <button
+                        type="button"
+                        className="dropdown-item logout-item"
+                        onClick={handleLogoutAction}
+                      >
+                        🚪 Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Wishlist Heart Button (Only shown when logged in) */}
                 <button
                   type="button"
-                  className="nav-user-pill-btn"
-                  onClick={() => setUserMenuOpen((prev) => !prev)}
-                  aria-label={`User account menu for ${user.name}`}
-                  title={`Signed in as ${user.name}`}
+                  className="action-btn badge-btn"
+                  aria-label={`Wishlist (${wishlistCount} items)`}
+                  title={`Wishlist (${wishlistCount} items)`}
+                  onClick={handleWishlistClick}
                 >
-                  <span className="user-avatar-initial">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
-                  <span className="user-pill-name">{user.name.split(' ')[0]}</span>
-                  <svg className="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <polyline points="6 9 12 15 18 9" />
+                  <svg
+                    className="action-icon"
+                    width="19"
+                    height="19"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
+                  {wishlistCount > 0 && (
+                    <span className="count-badge">{wishlistCount}</span>
+                  )}
                 </button>
 
-                {/* Dropdown Menu */}
-                {userMenuOpen && (
-                  <div className="nav-user-dropdown" role="menu">
-                    <div className="dropdown-header">
-                      <strong>{user.name}</strong>
-                      <small>{user.email || user.identifier || 'PROTINUT Member'}</small>
-                    </div>
-                    <div className="dropdown-divider" />
-                    <button
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        navigate('/account');
-                      }}
-                    >
-                      👤 My Account
-                    </button>
-                    <button
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        navigate('/orders');
-                      }}
-                    >
-                      📦 My Orders
-                    </button>
-                    <button
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        navigate('/cart');
-                      }}
-                    >
-                      🛍️ My Cart ({cartCount} items)
-                    </button>
-                    <button
-                      type="button"
-                      className="dropdown-item"
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        navigate('/wishlist');
-                      }}
-                    >
-                      ❤️ My Wishlist ({wishlistCount} items)
-                    </button>
-                    <div className="dropdown-divider" />
-                    <button
-                      type="button"
-                      className="dropdown-item logout-item"
-                      onClick={handleLogoutAction}
-                    >
-                      🚪 Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+                {/* Shopping Cart Button (Only shown when logged in) */}
+                <button
+                  type="button"
+                  className="action-btn badge-btn"
+                  onClick={handleCartClick}
+                  aria-label={`Open Cart (${cartCount} items)`}
+                  title={`View Cart (${cartCount} items)`}
+                >
+                  <svg
+                    className="action-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="9" cy="21" r="1.5" />
+                    <circle cx="19" cy="21" r="1.5" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                  </svg>
+                  {cartCount > 0 && (
+                    <span className="count-badge">{cartCount}</span>
+                  )}
+                </button>
+              </>
             ) : (
+              /* If NOT logged in, show Login button that opens modal */
               <button
                 type="button"
-                className="action-btn"
-                aria-label="User Account / Sign in"
-                title="Login / Register"
-                onClick={handleAccountClick}
+                onClick={() => onOpenLogin && onOpenLogin()}
+                className="nav-login-btn"
+                aria-label="Login to PROTINUT"
               >
-                <svg
-                  className="action-icon"
-                  width="19"
-                  height="19"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
+                <span>Login</span>
               </button>
             )}
-
-            {/* Wishlist Heart Button */}
-            <button
-              type="button"
-              className="action-btn badge-btn"
-              aria-label={`Wishlist (${isAuthenticated ? wishlistCount : 0} items)`}
-              title={isAuthenticated ? `Wishlist (${wishlistCount} items)` : 'Login to view Wishlist'}
-              onClick={handleWishlistClick}
-            >
-              <svg
-                className="action-icon"
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-              {/* Badge is completely hidden for non-logged-in users */}
-              {isAuthenticated && wishlistCount > 0 && (
-                <span className="count-badge">{wishlistCount}</span>
-              )}
-            </button>
-
-            {/* Shopping Cart Button */}
-            <button
-              type="button"
-              className="action-btn badge-btn"
-              onClick={handleCartClick}
-              aria-label={`Open Cart (${isAuthenticated ? cartCount : 0} items)`}
-              title={isAuthenticated ? `View Cart (${cartCount} items)` : 'Login to view Cart'}
-            >
-              <svg
-                className="action-icon"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="9" cy="21" r="1.5" />
-                <circle cx="19" cy="21" r="1.5" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              {/* Badge is completely hidden for non-logged-in users */}
-              {isAuthenticated && cartCount > 0 && (
-                <span className="count-badge">{cartCount}</span>
-              )}
-            </button>
 
             {/* SHOP NOW -> Pill Button */}
             <Link to="/products" className="btn-shop-now">

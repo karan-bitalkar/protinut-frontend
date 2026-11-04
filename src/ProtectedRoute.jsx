@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isAuthenticated) {
     const redirectUrl = encodeURIComponent(location.pathname + location.search);
-    return <Navigate to={`/login?redirect=${redirectUrl}`} replace state={{ from: location }} />;
+    return <Navigate to={`/?auth=login&redirect=${redirectUrl}`} replace state={{ from: location }} />;
   }
 
   return children;

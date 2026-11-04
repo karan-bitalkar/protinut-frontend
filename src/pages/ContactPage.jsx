@@ -48,7 +48,7 @@ const ContactPage = () => {
                   <span className="detail-icon">📍</span>
                   <div>
                     <strong>Manufacturing & HQ:</strong>
-                    <p>Dharashiv, Maharashtra, India — 413501</p>
+                    <p>PROTINUT FOODS<br/>Laxmi Niwas, Vidya Nagar, Dharashiv (Gramin), Dharashiv Taluka, Dharashiv, Maharashtra - 413501<br/>Country of Origin: Product of India</p>
                   </div>
                 </div>
 
@@ -56,7 +56,7 @@ const ContactPage = () => {
                   <span className="detail-icon">📧</span>
                   <div>
                     <strong>Email Us:</strong>
-                    <p>support@protinut.in / contact@protinut.in</p>
+                    <p><a href="mailto:protinut.in@gmail.com" className="underline">protinut.in@gmail.com</a></p>
                   </div>
                 </div>
 
@@ -64,7 +64,7 @@ const ContactPage = () => {
                   <span className="detail-icon">📞</span>
                   <div>
                     <strong>Phone / WhatsApp:</strong>
-                    <p>+91 98765 43210 (Mon – Sat, 9:00 AM – 7:00 PM)</p>
+                    <p><a href="tel:+918308302301" className="underline">+91 830 830 2301</a> (Mon – Sat, 9:00 AM – 7:00 PM)</p>
                   </div>
                 </div>
 
@@ -72,7 +72,7 @@ const ContactPage = () => {
                   <span className="detail-icon">🛡️</span>
                   <div>
                     <strong>Food Safety & Standards:</strong>
-                    <p>FSSAI Central Lic. No. 10020021000123</p>
+                    <p>FSSAI No: 21526050000128</p>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './AboutUs.css';
+import founderImg from './assets/founder.jpg';
 
 // ── 1. Milestones Data ──
 const milestones = [
@@ -178,7 +179,11 @@ const AboutUs = () => {
                 <div className="founder-photo-frame">
                   {/* Founder Visual Icon */}
                   <div className="founder-avatar-circle">
-                    <span className="founder-avatar-emoji">👨‍🍳</span>
+                    <img
+                      src={founderImg}
+                      alt="Founder of Protinut"
+                      className="founder-avatar-img"
+                    />
                   </div>
 
                   <span className="founder-role-tag">

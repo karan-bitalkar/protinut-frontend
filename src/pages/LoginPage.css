@@ -1,0 +1,628 @@
+/* ============================================================
+   PROTINUT™ — Flipkart Exact Replica Auth Page
+   Left: Flipkart Blue #2874f0 with graphic
+   Right: Clean underline floating-label inputs, Orange #fb641b CTA
+   ============================================================ */
+
+/* ── Page Root ── */
+.fk-login-page-root {
+  min-height: 100vh;
+  background-color: #f1f3f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Flipkart Top Blue Header Strip ── */
+.fk-top-header-strip {
+  background-color: #2874f0;
+  height: 56px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.fk-header-container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fk-brand-logo-link {
+  display: inline-flex;
+  flex-direction: column;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.fk-brand-name {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.3px;
+}
+
+.fk-brand-sub {
+  color: #ffffff;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 500;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  opacity: 0.95;
+}
+
+.fk-brand-sub em {
+  color: #ffe500;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.fk-plus-star {
+  color: #ffe500;
+  font-size: 10px;
+  font-style: normal;
+  display: inline-block;
+}
+
+.fk-header-home-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.fk-header-home-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Main Centered Viewport ── */
+.fk-login-main-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  box-sizing: border-box;
+}
+
+/* ── Exact Flipkart Split Card (850px × min 528px) ── */
+.fk-auth-card {
+  width: 850px;
+  max-width: 100%;
+  min-height: 528px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ═══════════════════════════════════════════════
+   LEFT COLUMN — Flipkart Blue #2874f0 Panel
+   =============================================== */
+.fk-left-column {
+  width: 40%;
+  background-color: #2874f0;
+  padding: 40px 33px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.fk-left-text-block {
+  position: relative;
+  z-index: 2;
+}
+
+.fk-main-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+}
+
+.fk-sub-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #dbdbdb;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Bottom Graphic / Stage (Flipkart Shopping Bag / Products aesthetic) */
+.fk-left-bottom-graphic {
+  position: relative;
+  width: 100%;
+  min-height: 170px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+  padding-bottom: 8px;
+}
+
+.fk-graphic-jars-stage {
+  position: relative;
+  width: 220px;
+  height: 135px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.fk-jar-img {
+  position: absolute;
+  bottom: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  pointer-events: none;
+}
+
+.fk-jar-img.jar-1 {
+  width: 110px;
+  left: 18px;
+  z-index: 2;
+  transform: rotate(-6deg);
+}
+
+.fk-jar-img.jar-2 {
+  width: 120px;
+  right: 18px;
+  z-index: 3;
+  transform: rotate(5deg);
+}
+
+.fk-graphic-ground-cloud {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 230px;
+  height: 50px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.08) 50%, transparent 75%);
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+/* ═══════════════════════════════════════════════
+   RIGHT COLUMN — Flipkart Clean Form
+   =============================================== */
+.fk-right-column {
+  width: 60%;
+  background-color: #ffffff;
+  padding: 40px 35px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.fk-form-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── Floating Underline Input Field ── */
+.fk-input-group {
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.fk-underline-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 0;
+  font-size: 15px;
+  color: #212121;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.fk-underline-input:focus {
+  border-bottom-color: #2874f0;
+  border-bottom-width: 2px;
+  padding-bottom: 9px;
+}
+
+.fk-underline-input.has-error {
+  border-bottom-color: #ff6161 !important;
+  border-bottom-width: 2px;
+  padding-bottom: 9px;
+}
+
+.fk-floating-label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 15px;
+  color: #878787;
+  pointer-events: none;
+  transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1) all;
+}
+
+/* Floating animation triggered by focus or value */
+.fk-underline-input:focus ~ .fk-floating-label,
+.fk-underline-input:not(:placeholder-shown) ~ .fk-floating-label {
+  top: -10px;
+  font-size: 11px;
+  color: #878787;
+  font-weight: 500;
+}
+
+.fk-underline-input:focus ~ .fk-floating-label {
+  color: #2874f0;
+}
+
+.fk-underline-input.has-error ~ .fk-floating-label {
+  color: #ff6161;
+}
+
+/* Phone prefix wrapper */
+.fk-phone-prefix-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.fk-prefix-code {
+  font-size: 15px;
+  color: #212121;
+  font-weight: 500;
+  padding-right: 8px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.fk-underline-input.with-prefix {
+  padding-left: 4px;
+}
+
+.fk-floating-label.with-prefix-label {
+  left: 36px;
+}
+
+.fk-underline-input:focus ~ .fk-floating-label.with-prefix-label,
+.fk-underline-input:not(:placeholder-shown) ~ .fk-floating-label.with-prefix-label {
+  left: 0;
+}
+
+/* Error text underneath */
+.fk-error-text {
+  display: block;
+  font-size: 11px;
+  color: #ff6161;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Inline action buttons inside input group (Forgot?, Show/Hide) */
+.fk-forgot-btn,
+.fk-show-pw-btn {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  background: none;
+  border: none;
+  color: #2874f0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  outline: none;
+  font-family: inherit;
+}
+
+.fk-forgot-btn:hover,
+.fk-show-pw-btn:hover {
+  text-decoration: underline;
+}
+
+/* ── Terms of Use Text ── */
+.fk-terms-text {
+  font-size: 12px;
+  color: #878787;
+  line-height: 1.5;
+  margin: 8px 0 20px 0;
+}
+
+.fk-link-blue {
+  color: #2874f0;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.fk-link-blue:hover {
+  text-decoration: underline;
+}
+
+/* ── Primary Flipkart CTA (#fb641b Orange) ── */
+.fk-btn-primary {
+  width: 100%;
+  height: 48px;
+  background-color: #fb641b;
+  color: #ffffff;
+  border: none;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+
+.fk-btn-primary:hover:not(:disabled) {
+  background-color: #f45a10;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+}
+
+.fk-btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── OR Divider ── */
+.fk-or-divider {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+  gap: 12px;
+}
+
+.fk-or-divider .line {
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.fk-or-divider .or-text {
+  font-size: 13px;
+  color: #878787;
+  font-weight: 500;
+}
+
+/* ── Secondary CTA (White Box with Blue Text) ── */
+.fk-btn-secondary {
+  width: 100%;
+  height: 48px;
+  background-color: #ffffff;
+  color: #2874f0;
+  border: none;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+
+.fk-btn-secondary:hover {
+  background-color: #fafafa;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ── Flipkart Signature White Raised Button: "Existing User? Log in" ── */
+.fk-btn-white-raised {
+  width: 100%;
+  height: 48px;
+  background-color: #ffffff;
+  color: #2874f0;
+  border: none;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+
+.fk-btn-white-raised:hover {
+  background-color: #fafafa;
+  box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ── Bottom Switch Link: "New to Protinut? Create an account" ── */
+.fk-bottom-account-link {
+  margin-top: auto;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.fk-switch-text-btn {
+  background: none;
+  border: none;
+  color: #2874f0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+
+.fk-switch-text-btn:hover {
+  text-decoration: underline;
+}
+
+/* ── OTP Verification Flow Specifics ── */
+.fk-otp-header-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #212121;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.fk-link-blue-sm {
+  background: none;
+  border: none;
+  color: #2874f0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.fk-link-blue-sm:hover {
+  text-decoration: underline;
+}
+
+.fk-otp-resend-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -14px 0 24px 0;
+  font-size: 12px;
+}
+
+.fk-timer-text {
+  color: #878787;
+  font-weight: 500;
+}
+
+/* ── Registration Success View ── */
+.fk-success-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  flex: 1;
+}
+
+.fk-success-check-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #26a541;
+  color: #ffffff;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(38, 165, 65, 0.3);
+}
+
+.fk-success-view h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #212121;
+  margin: 0 0 10px 0;
+}
+
+.fk-success-view p {
+  font-size: 14px;
+  color: #878787;
+  margin: 0 0 28px 0;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVENESS (Mobile & Tablet)
+   =============================================== */
+@media (max-width: 768px) {
+  .fk-top-header-strip {
+    height: 52px;
+  }
+
+  .fk-login-main-wrapper {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .fk-auth-card {
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .fk-left-column {
+    width: 100%;
+    padding: 24px 20px;
+    min-height: auto;
+  }
+
+  .fk-left-bottom-graphic {
+    display: none;
+  }
+
+  .fk-main-title {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .fk-sub-title {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .fk-right-column {
+    width: 100%;
+    padding: 28px 20px 24px;
+    flex: 1;
+  }
+
+  .fk-bottom-account-link {
+    padding-top: 20px;
+  }
+}

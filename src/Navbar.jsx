@@ -222,16 +222,6 @@ const Navbar = ({
                         className="dropdown-item"
                         onClick={() => {
                           setUserMenuOpen(false);
-                          navigate('/orders?invoice=latest');
-                        }}
-                      >
-                        🧾 Tax Invoice
-                      </button>
-                      <button
-                        type="button"
-                        className="dropdown-item"
-                        onClick={() => {
-                          setUserMenuOpen(false);
                           navigate('/wishlist');
                         }}
                       >

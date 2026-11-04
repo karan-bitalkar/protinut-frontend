@@ -172,8 +172,8 @@ const OrdersPage = () => {
                     {/* Actions: Download Invoice, Track Order & Cancel Order */}
                     <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end pt-3 md:pt-0 border-t md:border-t-0 border-gray-100">
                       
-                      {/* Download Invoice Button (Hidden for Cancelled orders) */}
-                      {!isCancelled && (
+                      {/* Download Invoice Button (Hidden for Cancelled orders or shows "Not Available") */}
+                      {!isCancelled ? (
                         <button
                           type="button"
                           onClick={() => setSelectedInvoiceOrder(order)}
@@ -185,6 +185,10 @@ const OrdersPage = () => {
                           </svg>
                           <span>🧾 Download Invoice</span>
                         </button>
+                      ) : (
+                        <span className="px-3 py-1.5 text-xs font-semibold text-gray-400 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-1">
+                          <span>🧾 Invoice Not Available</span>
+                        </span>
                       )}
 
                       {/* Cancel Order Button (Opens Modal) */}

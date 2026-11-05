@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import InvoiceModal from '../InvoiceModal';
 import './Pages.css';
 
-const AccountPage = ({ wishlistCount = 0, onClearWishlist, onLogout }) => {
+const AccountPage = ({ wishlistCount = 0, onClearWishlist, onLogout, onOpenCart }) => {
   const { user, logout } = useAuth();
   const { totalCartCount, resetCart } = useCart();
   const { orders, resetOrders } = useOrders();
@@ -37,162 +37,310 @@ const AccountPage = ({ wishlistCount = 0, onClearWishlist, onLogout }) => {
     }
   };
 
+  const handleCartAction = () => {
+    if (onOpenCart) {
+      onOpenCart();
+    } else {
+      navigate('/cart');
+    }
+  };
+
+  const handleInvoiceAction = () => {
+    if (orders.length > 0) {
+      setIsInvoiceOpen(true);
+    } else {
+      toast.error('No orders placed yet. Please place an order first!');
+    }
+  };
+
   return (
-    <div className="account-page" style={{ minHeight: '80vh', background: '#faf5ee', paddingBottom: '80px' }}>
+    <div className="account-page min-h-[85vh] bg-[#faf5ee] pb-28 md:pb-16 font-sans">
       
-      {/* ── Page Header ── */}
-      <div className="wishlist-hero-strip" style={{ background: '#fffcf8', borderBottom: '1px solid #ebdcd0', padding: '45px 24px' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <span style={{ fontSize: '12px', fontWeight: 700, color: '#8c7a6e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            <Link to="/" style={{ color: '#ef5323', textDecoration: 'none' }}>Home</Link> / <span>My Account</span>
-          </span>
-          <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '32px', fontWeight: 900, color: '#2b1810', margin: '8px 0' }}>
-            Welcome, {user?.name || 'Member'}! 👋
-          </h1>
-          <p style={{ color: '#6a5a50', fontSize: '15px', margin: 0 }}>
-            Manage your personal profile, orders, cart, and saved peanut butter jars.
-          </p>
+      {/* ── Page Header / Breadcrumb (Desktop) ── */}
+      <div className="bg-[#fffcf8] border-b border-[#ebdcd0] py-6 px-4 sm:px-8">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div>
+            <span className="text-xs font-bold text-[#8c7a6e] uppercase tracking-wider">
+              <Link to="/" className="text-[#ef5323] hover:underline">Home</Link> / <span>My Profile</span>
+            </span>
+            <h1 className="font-['Montserrat'] text-2xl sm:text-3xl font-black text-[#2b1810] mt-1 mb-0.5">
+              My Account
+            </h1>
+            <p className="text-sm text-[#6a5a50] hidden sm:block">
+              Manage your personal profile, orders, cart, and tax invoices.
+            </p>
+          </div>
+
+          {/* Quick Logout Button (Desktop) */}
+          <button
+            type="button"
+            onClick={handleLogoutClick}
+            className="hidden md:inline-flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-bold px-4 py-2 rounded-full transition"
+          >
+            <span>🚪 Logout</span>
+          </button>
         </div>
       </div>
 
-      <div style={{ maxWidth: '900px', margin: '40px auto 0', padding: '0 24px' }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-8 mt-5">
         
-        {/* Profile Card */}
-        <div style={{ background: '#ffffff', borderRadius: '28px', border: '1.5px solid #ebdcd0', padding: '36px', boxShadow: '0 10px 30px rgba(43,24,16,0.06)', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
-          
-          <div style={{ width: '84px', height: '84px', borderRadius: '50%', background: '#ef5323', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', fontWeight: 900, fontFamily: "'Montserrat', sans-serif", boxShadow: '0 8px 20px rgba(239,83,35,0.35)' }}>
-            {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
-          </div>
-
-          <div style={{ flexGrow: 1 }}>
-            <div style={{ display: 'inline-block', background: '#fff3ec', color: '#ef5323', border: '1px solid #fed6be', fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: '999px', textTransform: 'uppercase', marginBottom: '6px' }}>
-              PROTINUT PRIME MEMBER
+        {/* ── User Profile Banner (Native App Style) ── */}
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#ebdcd0] p-5 sm:p-7 shadow-sm mb-5">
+          <div className="flex items-center gap-4 sm:gap-6">
+            
+            {/* User Avatar Initial */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#ef5323] to-[#d84417] text-white flex items-center justify-center text-2xl sm:text-3xl font-black font-['Montserrat'] shadow-md flex-shrink-0">
+              {user?.name ? user.name.charAt(0).toUpperCase() : 'P'}
             </div>
-            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '24px', fontWeight: 900, color: '#2b1810', margin: '0 0 6px' }}>
-              {user?.name}
-            </h2>
-            <div style={{ display: 'flex', gap: '16px', color: '#6a5a50', fontSize: '14px', flexWrap: 'wrap' }}>
-              <span>📧 {user?.email || user?.identifier}</span>
-              <span>📱 {user?.phone || '+91 98765 43210'}</span>
-            </div>
-          </div>
 
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {/* User Meta */}
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-1.5 bg-[#fff3ec] text-[#ef5323] border border-[#fed6be] text-[10px] sm:text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider mb-1">
+                <span>★</span> PROTINUT PRIME MEMBER
+              </div>
+              <h2 className="font-['Montserrat'] text-lg sm:text-2xl font-black text-[#2b1810] truncate">
+                {user?.name || 'Valued Customer'}
+              </h2>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm text-[#6a5a50] mt-0.5">
+                <span className="truncate">📧 {user?.email || user?.identifier || 'customer@protinut.com'}</span>
+                <span>📱 {user?.phone || '+91 98765 43210'}</span>
+              </div>
+            </div>
+
+            {/* Test Reset Button */}
             <button
               type="button"
               onClick={handleResetForTesting}
               title="Reset state to 0 for testing"
-              style={{ background: '#f3f4f6', border: '1px solid #d1d5db', color: '#374151', padding: '10px 18px', borderRadius: '999px', fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
+              className="hidden lg:inline-flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-300 transition"
             >
-              🔄 Reset to 0 Items
-            </button>
-            <button
-              type="button"
-              onClick={handleLogoutClick}
-              style={{ background: '#fee2e2', border: '1px solid #fca5a5', color: '#b91c1c', padding: '10px 20px', borderRadius: '999px', fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}
-            >
-              🚪 Logout
+              🔄 Reset
             </button>
           </div>
-
         </div>
 
-        {/* ── Live Account Stats Strip (Initially 0 Orders, 0 Cart, 0 Wishlist) ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '30px' }}>
+        {/* ── Quick Stats Strip (3 Tabs) ── */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
           
-          <div style={{ background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '20px', padding: '20px', textAlign: 'center', boxShadow: '0 4px 14px rgba(43,24,16,0.03)' }}>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: '#8c7a6e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Past Orders</span>
-            <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '32px', fontWeight: 900, color: '#2b1810', margin: '4px 0' }}>
+          <Link
+            to="/orders"
+            className="bg-white border border-[#ebdcd0] rounded-xl p-3 text-center shadow-xs hover:border-[#ef5323] transition flex flex-col justify-center no-underline"
+          >
+            <span className="text-[10px] sm:text-xs font-bold text-[#8c7a6e] uppercase tracking-wider">Orders</span>
+            <span className="font-['Montserrat'] text-xl sm:text-2xl font-black text-[#2b1810] my-0.5">
               {orders.length}
-            </div>
-            <span style={{ fontSize: '12px', color: orders.length === 0 ? '#15803d' : '#ef5323', fontWeight: 700 }}>
-              {orders.length === 0 ? '0 Orders Initially' : `${orders.length} Total Orders`}
             </span>
-          </div>
+            <span className="text-[10px] sm:text-xs text-[#ef5323] font-bold">Past Orders</span>
+          </Link>
 
-          <div style={{ background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '20px', padding: '20px', textAlign: 'center', boxShadow: '0 4px 14px rgba(43,24,16,0.03)' }}>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: '#8c7a6e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Items in Cart</span>
-            <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '32px', fontWeight: 900, color: '#2b1810', margin: '4px 0' }}>
-              {totalCartCount}
-            </div>
-            <span style={{ fontSize: '12px', color: totalCartCount === 0 ? '#15803d' : '#ef5323', fontWeight: 700 }}>
-              {totalCartCount === 0 ? '0 Cart Items (Empty)' : `${totalCartCount} Jars in Cart`}
-            </span>
-          </div>
-
-          <div style={{ background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '20px', padding: '20px', textAlign: 'center', boxShadow: '0 4px 14px rgba(43,24,16,0.03)' }}>
-            <span style={{ fontSize: '12px', fontWeight: 800, color: '#8c7a6e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wishlist Jars</span>
-            <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '32px', fontWeight: 900, color: '#2b1810', margin: '4px 0' }}>
+          <Link
+            to="/wishlist"
+            className="bg-white border border-[#ebdcd0] rounded-xl p-3 text-center shadow-xs hover:border-[#ef5323] transition flex flex-col justify-center no-underline"
+          >
+            <span className="text-[10px] sm:text-xs font-bold text-[#8c7a6e] uppercase tracking-wider">Wishlist</span>
+            <span className="font-['Montserrat'] text-xl sm:text-2xl font-black text-[#2b1810] my-0.5">
               {wishlistCount}
-            </div>
-            <span style={{ fontSize: '12px', color: wishlistCount === 0 ? '#15803d' : '#ef5323', fontWeight: 700 }}>
-              {wishlistCount === 0 ? '0 Saved Items' : `${wishlistCount} Jars Saved`}
             </span>
-          </div>
-
-        </div>
-
-        {/* Quick Links Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-          
-          <Link to="/orders" style={{ textDecoration: 'none', background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '22px', padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 14px rgba(43,24,16,0.04)', transition: 'transform 0.2s' }}>
-            <span style={{ fontSize: '36px' }}>📦</span>
-            <div>
-              <strong style={{ display: 'block', fontFamily: "'Montserrat', sans-serif", fontSize: '17px', fontWeight: 800, color: '#2b1810', marginBottom: '3px' }}>
-                My Orders ({orders.length})
-              </strong>
-              <span style={{ fontSize: '13px', color: '#796659' }}>Track active orders & history</span>
-            </div>
-          </Link>
-
-          <Link to="/wishlist" style={{ textDecoration: 'none', background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '22px', padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 14px rgba(43,24,16,0.04)', transition: 'transform 0.2s' }}>
-            <span style={{ fontSize: '36px' }}>❤️</span>
-            <div>
-              <strong style={{ display: 'block', fontFamily: "'Montserrat', sans-serif", fontSize: '17px', fontWeight: 800, color: '#2b1810', marginBottom: '3px' }}>
-                My Wishlist ({wishlistCount})
-              </strong>
-              <span style={{ fontSize: '13px', color: '#796659' }}>Saved favorite jars</span>
-            </div>
-          </Link>
-
-          <Link to="/cart" style={{ textDecoration: 'none', background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '22px', padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 14px rgba(43,24,16,0.04)', transition: 'transform 0.2s' }}>
-            <span style={{ fontSize: '36px' }}>🛍️</span>
-            <div>
-              <strong style={{ display: 'block', fontFamily: "'Montserrat', sans-serif", fontSize: '17px', fontWeight: 800, color: '#2b1810', marginBottom: '3px' }}>
-                Shopping Cart ({totalCartCount})
-              </strong>
-              <span style={{ fontSize: '13px', color: '#796659' }}>Review items & checkout</span>
-            </div>
+            <span className="text-[10px] sm:text-xs text-[#ef5323] font-bold">Saved Jars</span>
           </Link>
 
           <button
             type="button"
-            onClick={() => {
-              if (orders.length > 0) {
-                setIsInvoiceOpen(true);
-              } else {
-                toast.error('No orders placed yet. Please place an order first!');
-              }
-            }}
-            style={{ textDecoration: 'none', background: '#fff9f5', border: '1.5px solid #fed7aa', borderRadius: '22px', padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 14px rgba(245,130,32,0.06)', transition: 'transform 0.2s', cursor: 'pointer', textAlign: 'left' }}
+            onClick={handleCartAction}
+            className="bg-white border border-[#ebdcd0] rounded-xl p-3 text-center shadow-xs hover:border-[#ef5323] transition flex flex-col justify-center cursor-pointer"
           >
-            <span style={{ fontSize: '36px' }}>🧾</span>
-            <div>
-              <strong style={{ display: 'block', fontFamily: "'Montserrat', sans-serif", fontSize: '17px', fontWeight: 800, color: '#ea580c', marginBottom: '3px' }}>
-                Tax Invoice
-              </strong>
-              <span style={{ fontSize: '13px', color: '#796659' }}>Download official GST Invoice</span>
-            </div>
+            <span className="text-[10px] sm:text-xs font-bold text-[#8c7a6e] uppercase tracking-wider">Cart</span>
+            <span className="font-['Montserrat'] text-xl sm:text-2xl font-black text-[#2b1810] my-0.5">
+              {totalCartCount}
+            </span>
+            <span className="text-[10px] sm:text-xs text-[#ef5323] font-bold">In Cart</span>
           </button>
 
-          <Link to="/products" style={{ textDecoration: 'none', background: '#ffffff', border: '1.5px solid #ebdcd0', borderRadius: '22px', padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 4px 14px rgba(43,24,16,0.04)', transition: 'transform 0.2s' }}>
-            <span style={{ fontSize: '36px' }}>🥜</span>
-            <div>
-              <strong style={{ display: 'block', fontFamily: "'Montserrat', sans-serif", fontSize: '17px', fontWeight: 800, color: '#2b1810', marginBottom: '3px' }}>Explore Products</strong>
-              <span style={{ fontSize: '13px', color: '#796659' }}>Discover high-protein jars</span>
+        </div>
+
+        {/* ── LARGE, LIST-STYLE BUTTONS (Native Flipkart/Myntra Profile Menu) ── */}
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#ebdcd0] shadow-sm overflow-hidden divide-y divide-gray-100 mb-6">
+          
+          {/* 1. My Orders */}
+          <Link
+            to="/orders"
+            className="flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition no-underline group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-orange-50 text-[#ef5323] flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                📦
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  My Orders
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Track active shipments, view history & download receipts
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {orders.length > 0 && (
+                <span className="bg-orange-100 text-[#ef5323] text-xs font-black px-2.5 py-0.5 rounded-full">
+                  {orders.length}
+                </span>
+              )}
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
             </div>
           </Link>
 
+          {/* 2. My Wishlist */}
+          <Link
+            to="/wishlist"
+            className="flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition no-underline group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                ❤️
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  My Wishlist
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Your saved peanut butter flavors & favorites
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {wishlistCount > 0 && (
+                <span className="bg-rose-100 text-rose-700 text-xs font-black px-2.5 py-0.5 rounded-full">
+                  {wishlistCount}
+                </span>
+              )}
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          {/* 3. My Shopping Cart */}
+          <button
+            type="button"
+            onClick={handleCartAction}
+            className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition text-left cursor-pointer group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                🛍️
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  My Shopping Cart
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Review selected jars, apply coupons & checkout
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {totalCartCount > 0 && (
+                <span className="bg-amber-100 text-amber-800 text-xs font-black px-2.5 py-0.5 rounded-full">
+                  {totalCartCount} Jars
+                </span>
+              )}
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </button>
+
+          {/* 4. Tax Invoice */}
+          <button
+            type="button"
+            onClick={handleInvoiceAction}
+            className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition text-left cursor-pointer group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                🧾
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  Download Tax Invoice
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Official GST invoice receipt (CGST 2.5% + SGST 2.5%)
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                GSTIN Verified
+              </span>
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </button>
+
+          {/* 5. Explore Products */}
+          <Link
+            to="/products"
+            className="flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition no-underline group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-orange-50 text-[#ef5323] flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                🥜
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  Explore Products
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Browse 100% slow-roasted natural peanut butter range
+                </p>
+              </div>
+            </div>
+            <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+
+          {/* 6. Help & Support */}
+          <Link
+            to="/contact"
+            className="flex items-center justify-between p-4 sm:p-5 hover:bg-[#fff9f5] active:bg-[#fff3ec] transition no-underline group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                💬
+              </div>
+              <div>
+                <h3 className="font-['Montserrat'] text-sm sm:text-base font-bold text-gray-900 m-0">
+                  Help & Customer Support
+                </h3>
+                <p className="text-xs text-gray-500 m-0 mt-0.5">
+                  Direct support: +91 830 830 2301 • Dharashiv, Maharashtra
+                </p>
+              </div>
+            </div>
+            <svg className="w-5 h-5 text-gray-400 group-hover:text-[#ef5323] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+
+        </div>
+
+        {/* ── Prominent Large Tap Logout Button (Mobile & Desktop) ── */}
+        <div className="mb-8">
+          <button
+            type="button"
+            onClick={handleLogoutClick}
+            className="w-full bg-white hover:bg-red-50 active:bg-red-100 text-red-600 border-1.5 border-red-200 hover:border-red-400 font-['Montserrat'] font-extrabold text-sm sm:text-base py-4 px-6 rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>Logout from Account</span>
+          </button>
         </div>
 
       </div>

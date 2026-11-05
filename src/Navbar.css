@@ -441,6 +441,9 @@
   .desktop-only-action {
     display: none !important;
   }
+  .btn-shop-now {
+    display: none !important;
+  }
 }
 
 @media (max-width: 600px) {

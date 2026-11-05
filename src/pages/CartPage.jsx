@@ -33,7 +33,7 @@ const CartPage = () => {
   const amountNeededForFreeDelivery = Math.max(0, freeDeliveryThreshold - subtotal);
 
   return (
-    <div className="min-h-screen bg-[#f1f3f6] py-6 px-3 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#f1f3f6] py-6 px-3 sm:px-6 lg:px-8 pb-28 md:pb-8 font-sans">
       <div className="max-w-6xl mx-auto">
         
         {/* Breadcrumb & Protinut / Flipkart Bar */}
@@ -353,6 +353,25 @@ const CartPage = () => {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* Mobile Sticky Checkout Bar (< 768px) */}
+        {cartItems.length > 0 && (
+          <div className="md:hidden fixed bottom-[60px] left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] flex items-center justify-between z-40">
+            <div>
+              <span className="block text-[11px] text-gray-500 font-semibold uppercase">Total Amount</span>
+              <span className="text-lg font-black text-primary font-['Montserrat']">₹{grandTotal}</span>
+            </div>
+            <button
+              onClick={() => navigate('/checkout')}
+              className="bg-[#fb641b] hover:bg-[#e85a14] active:bg-[#d44e10] text-white font-extrabold uppercase text-xs tracking-wider px-6 py-3 rounded-lg shadow-md flex items-center gap-1.5"
+            >
+              <span>Proceed to Checkout</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         )}
 

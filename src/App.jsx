@@ -263,7 +263,7 @@ function AppContent() {
       )}
 
       {/* Page Routes */}
-      <main className="main-content-flow">
+      <main className="main-content-flow pb-20 md:pb-0">
         <Routes>
           {/* Public Routes */}
           <Route
@@ -392,6 +392,7 @@ function AppContent() {
                   wishlistCount={wishlistItems.length}
                   onClearWishlist={handleClearWishlist}
                   onLogout={handleLogout}
+                  onOpenCart={() => setIsCartOpen(true)}
                 />
               </ProtectedRoute>
             }

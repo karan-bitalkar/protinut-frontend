@@ -13,7 +13,7 @@ const WishlistPage = ({
   }, []);
 
   return (
-    <div className="wishlist-page-wrapper">
+    <div className="wishlist-page-wrapper pb-28 md:pb-16">
       
       {/* ── Hero Banner ── */}
       <div className="wishlist-hero-strip">

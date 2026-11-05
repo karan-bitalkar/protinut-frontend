@@ -1175,6 +1175,23 @@ const SideCartDrawer = ({
           )}
 
         </div>
+
+        {/* ── Mobile Sticky Bottom Checkout Bar (Native App Style) ── */}
+        {currentStep === 'cart' && displayItems.length > 0 && (
+          <div className="cart-mobile-sticky-footer">
+            <div className="sticky-footer-info">
+              <span className="sticky-footer-label">Grand Total (5% GST Incl.)</span>
+              <span className="sticky-footer-total">₹{grandTotal}</span>
+            </div>
+            <button
+              type="button"
+              className="sticky-footer-btn"
+              onClick={() => setCurrentStep('address')}
+            >
+              Proceed to Checkout ➔
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* ── Unified Premium Flipkart Style Tax Invoice Modal ── */}

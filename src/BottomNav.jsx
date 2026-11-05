@@ -17,7 +17,7 @@ const BottomNav = ({
   const isShopActive = location.pathname === '/products' || location.pathname.startsWith('/products/');
   const isWishlistActive = location.pathname === '/wishlist';
   const isCartActive = isCartOpen || location.pathname === '/cart';
-  const isAccountActive = location.pathname === '/account' || location.pathname.startsWith('/orders');
+  const isAccountActive = location.pathname === '/account' || location.pathname === '/profile' || location.pathname.startsWith('/orders') || (!isAuthenticated && (location.pathname === '/login' || location.pathname === '/register'));
 
   const handleHomeClick = (e) => {
     e.preventDefault();
@@ -61,7 +61,7 @@ const BottomNav = ({
   };
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="Mobile Navigation Bar">
+    <nav className="mobile-bottom-nav md:hidden" aria-label="Mobile Navigation Bar">
       
       {/* 1. Home Tab */}
       <button
@@ -170,12 +170,12 @@ const BottomNav = ({
         {isCartActive && <span className="bottom-nav-active-dot" />}
       </button>
 
-      {/* 5. Account Tab */}
+      {/* 5. Profile Tab */}
       <button
         type="button"
         className={`bottom-nav-item ${isAccountActive ? 'active' : ''}`}
         onClick={handleAccountClick}
-        aria-label="Account"
+        aria-label="Profile"
       >
         <div className="bottom-nav-icon-wrap">
           <svg
@@ -191,7 +191,7 @@ const BottomNav = ({
             <circle cx="12" cy="7" r="4" />
           </svg>
         </div>
-        <span className="bottom-nav-label">{isAuthenticated ? 'Account' : 'Login'}</span>
+        <span className="bottom-nav-label">Profile</span>
         {isAccountActive && <span className="bottom-nav-active-dot" />}
       </button>
 

@@ -17,7 +17,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="protinut-footer" id="contact-us">
+    <footer className="protinut-footer hidden md:block" id="contact-us">
       {/* Top Newsletter Strip */}
       <div className="footer-newsletter-wrap">
         <div className="footer-newsletter-container">

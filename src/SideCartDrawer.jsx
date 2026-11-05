@@ -756,11 +756,19 @@ const SideCartDrawer = ({
                 </div>
               </div>
 
-              {/* Cost Breakdown with 12% GST */}
+              {/* Cost Breakdown with 2.5% CGST & 2.5% SGST */}
               <div className="confirm-pricing-summary">
                 <div className="price-row">
                   <span>Subtotal</span>
-                  <span>₹{subtotal}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="price-row">
+                  <span>CGST (2.5%)</span>
+                  <span>₹{cgst.toFixed(2)}</span>
+                </div>
+                <div className="price-row">
+                  <span>SGST (2.5%)</span>
+                  <span>₹{sgst.toFixed(2)}</span>
                 </div>
                 <div className="price-row">
                   <span>Shipping</span>
@@ -769,13 +777,9 @@ const SideCartDrawer = ({
                 {discountAmount > 0 && (
                   <div className="price-row">
                     <span>Coupon Discount</span>
-                    <span className="green-txt">- ₹{discountAmount}</span>
+                    <span className="green-txt">- ₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="price-row gst-highlight-row">
-                  <span>Including 12% GST</span>
-                  <span>₹{totalGst}</span>
-                </div>
                 <div className="price-row grand-row">
                   <strong>Total Amount</strong>
                   <strong className="grand-txt">₹{grandTotal}</strong>
@@ -1138,7 +1142,7 @@ const SideCartDrawer = ({
                 </div>
                 <div className="info-row">
                   <span>Amount Paid:</span>
-                  <strong>₹{placedOrder.grandTotal} (incl. 12% GST)</strong>
+                  <strong>₹{placedOrder.grandTotal} (CGST 2.5% + SGST 2.5% incl.)</strong>
                 </div>
                 <div className="info-row">
                   <span>Payment Mode:</span>

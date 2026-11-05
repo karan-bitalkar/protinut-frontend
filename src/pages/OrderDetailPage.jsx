@@ -372,7 +372,7 @@ const OrderDetailPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold">₹{order.pricing.cgst ?? Math.round(order.pricing.subtotal * 0.025)}</span>
+                  <span className="font-semibold">₹{Number(order.pricing.cgst ?? ((order.pricing.subtotal * 2.5) / 100)).toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between text-gray-700">
@@ -382,7 +382,7 @@ const OrderDetailPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold">₹{order.pricing.sgst ?? Math.round(order.pricing.subtotal * 0.025)}</span>
+                  <span className="font-semibold">₹{Number(order.pricing.sgst ?? ((order.pricing.subtotal * 2.5) / 100)).toFixed(2)}</span>
                 </div>
 
                 <div className="flex justify-between text-gray-700">

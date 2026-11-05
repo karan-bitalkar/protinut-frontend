@@ -43,11 +43,11 @@ const CheckoutPage = () => {
     ? ((buyNowItem.originalPrice || Math.round(buyNowItem.finalPrice * 1.35)) * (buyNowItem.quantity || 1))
     : originalPriceTotal;
   const activeDiscount = Math.max(0, activeOriginalPriceTotal - activeSubtotal);
-  const activeCgst = buyNowItem ? Math.round(activeSubtotal * 0.025) : cgst;
-  const activeSgst = buyNowItem ? Math.round(activeSubtotal * 0.025) : sgst;
-  const activeTotalGst = activeCgst + activeSgst;
+  const activeCgst = buyNowItem ? Number(((activeSubtotal * 2.5) / 100).toFixed(2)) : cgst;
+  const activeSgst = buyNowItem ? Number(((activeSubtotal * 2.5) / 100).toFixed(2)) : sgst;
+  const activeTotalGst = Number((activeCgst + activeSgst).toFixed(2));
   const activeDeliveryCharge = (activeSubtotal > 499 || activeItems.length === 0) ? 0 : 40;
-  const activeGrandTotal = activeItems.length > 0 ? (activeSubtotal + activeDeliveryCharge + activeTotalGst) : 0;
+  const activeGrandTotal = activeItems.length > 0 ? Number((activeSubtotal + activeDeliveryCharge + activeTotalGst).toFixed(2)) : 0;
 
   // Scroll to top on mount
   useEffect(() => {
@@ -805,7 +805,7 @@ const CheckoutPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold text-gray-900">₹{activeCgst}</span>
+                  <span className="font-semibold text-gray-900">₹{activeCgst.toFixed(2)}</span>
                 </div>
 
                 {/* SGST (2.5%) */}
@@ -816,13 +816,13 @@ const CheckoutPage = () => {
                       2.5%
                     </span>
                   </span>
-                  <span className="font-semibold text-gray-900">₹{activeSgst}</span>
+                  <span className="font-semibold text-gray-900">₹{activeSgst.toFixed(2)}</span>
                 </div>
 
                 {/* Total Amount */}
                 <div className="flex items-center justify-between text-base sm:text-lg font-black text-gray-900 pt-3 border-t border-gray-200 border-dashed font-['Montserrat']">
                   <span>Total Amount</span>
-                  <span className="text-primary text-xl">₹{activeGrandTotal}</span>
+                  <span className="text-primary text-xl">₹{activeGrandTotal.toFixed(2)}</span>
                 </div>
               </div>
 

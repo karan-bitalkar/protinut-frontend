@@ -302,7 +302,7 @@ const CartPage = () => {
                         2.5%
                       </span>
                     </span>
-                    <span className="font-semibold text-gray-900">₹{cgst}</span>
+                    <span className="font-semibold text-gray-900">₹{cgst.toFixed(2)}</span>
                   </div>
 
                   {/* SGST (2.5%) */}
@@ -313,19 +313,19 @@ const CartPage = () => {
                         2.5%
                       </span>
                     </span>
-                    <span className="font-semibold text-gray-900">₹{sgst}</span>
+                    <span className="font-semibold text-gray-900">₹{sgst.toFixed(2)}</span>
                   </div>
 
                   {/* Total GST Summary note */}
                   <div className="text-[11px] text-gray-400 flex justify-between px-1">
-                    <span>Total GST (5%):</span>
-                    <span>₹{totalGst}</span>
+                    <span>Total GST (CGST 2.5% + SGST 2.5%):</span>
+                    <span>₹{totalGst.toFixed(2)}</span>
                   </div>
 
                   {/* Total Amount */}
                   <div className="flex items-center justify-between text-base sm:text-lg font-black text-gray-900 pt-3 border-t border-gray-200 border-dashed font-['Montserrat']">
                     <span>Total Amount</span>
-                    <span className="text-primary text-xl">₹{grandTotal}</span>
+                    <span className="text-primary text-xl">₹{grandTotal.toFixed(2)}</span>
                   </div>
                 </div>
 

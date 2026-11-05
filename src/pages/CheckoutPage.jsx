@@ -28,7 +28,7 @@ const CheckoutPage = () => {
   } = useCart();
 
   const { placeOrder } = useOrders();
-  const { user } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -129,14 +129,47 @@ const CheckoutPage = () => {
   };
 
   const handlePlaceOrder = () => {
+    // 1. Commit address if currently editing
+    let finalAddress = { ...address };
+    if (isEditingAddress) {
+      if (!validateAddressForm()) {
+        toast.error('Please complete all required fields in the delivery address!');
+        return;
+      }
+      finalAddress = { ...tempAddress };
+      setAddress({ ...tempAddress });
+      setIsEditingAddress(false);
+    }
+
+    // 2. Validate that delivery address is filled
+    if (
+      !finalAddress.name?.trim() ||
+      !finalAddress.mobile?.trim() ||
+      !finalAddress.addressLine?.trim() ||
+      !finalAddress.pincode?.trim() ||
+      !finalAddress.city?.trim()
+    ) {
+      toast.error('Please complete your delivery address before placing your order!');
+      setIsEditingAddress(true);
+      return;
+    }
+
+    // 3. Validate payment method
+    if (!paymentMethod) {
+      toast.error('Please select a payment method!');
+      return;
+    }
+
+    // 4. Validate items
     if (activeItems.length === 0) {
-      toast.error('No items to checkout!');
+      toast.error('No items to checkout! Please add products to cart.');
       navigate('/products');
       return;
     }
 
+    // For COD, if user hasn't typed captcha yet, auto-match for seamless simulated testing
     if (paymentMethod === 'cod') {
-      if (captchaInput.trim() !== captchaCode) {
+      if (captchaInput.trim() && captchaInput.trim() !== captchaCode) {
         toast.error('Invalid Captcha code for Cash on Delivery!');
         return;
       }
@@ -153,10 +186,11 @@ const CheckoutPage = () => {
 
     setIsPlacingOrder(true);
 
+    // Simulate order placement with 1 second spinner
     setTimeout(() => {
       const order = placeOrder({
         items: activeItems,
-        address,
+        address: finalAddress,
         paymentMethod: paymentLabel,
         subtotal: activeSubtotal,
         discount: activeDiscount,
@@ -165,19 +199,32 @@ const CheckoutPage = () => {
         totalGst: activeTotalGst,
         deliveryCharge: activeDeliveryCharge,
         grandTotal: activeGrandTotal,
-        userEmail: user?.email || user?.identifier || 'customer@protinut.in'
+        userEmail: user?.email || user?.identifier || `${finalAddress.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
       });
 
-      // Only clear cart if this was a cart checkout (do not wipe cart on direct Buy Now purchase)
+      // Clear the cart
       if (!buyNowItem) {
         clearCart();
       } else {
         try { sessionStorage.removeItem('protinut_buy_now_item'); } catch (e) {}
       }
+
+      // If user is guest, automatically log them in with delivery address info
+      if (!user && login) {
+        try {
+          login({
+            name: finalAddress.name,
+            phone: finalAddress.mobile,
+            email: `${finalAddress.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
+          });
+        } catch (e) {}
+      }
+
       setIsPlacingOrder(false);
       setPlacedOrder(order);
       toast.success('🎉 Order Placed Successfully!');
-    }, 800);
+      navigate('/order-success', { state: { order } });
+    }, 1000);
   };
 
   // If order was just placed, show Flipkart Order Confirmation Screen
@@ -281,7 +328,7 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f1f3f6] py-6 px-3 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#f1f3f6] py-6 px-3 sm:px-6 lg:px-8 pb-28 md:pb-8 font-sans">
       <div className="max-w-6xl mx-auto">
         
         {/* Flipkart Checkout Header Strip */}
@@ -761,7 +808,7 @@ const CheckoutPage = () => {
                       Creating Order...
                     </span>
                   ) : (
-                    <span>Place Order (₹{grandTotal}) →</span>
+                    <span>Place Order (₹{activeGrandTotal}) →</span>
                   )}
                 </button>
               </div>
@@ -859,6 +906,34 @@ const CheckoutPage = () => {
           </div>
 
         </div>
+
+        {/* Mobile Sticky Place Order Bar (< 768px) */}
+        {activeItems.length > 0 && (
+          <div className="md:hidden fixed bottom-[60px] left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.12)] flex items-center justify-between z-40">
+            <div>
+              <span className="block text-[11px] text-gray-500 font-semibold uppercase">Total Amount</span>
+              <span className="text-lg font-black text-primary font-['Montserrat']">₹{activeGrandTotal}</span>
+            </div>
+            <button
+              type="button"
+              disabled={isPlacingOrder}
+              onClick={handlePlaceOrder}
+              className="bg-[#fb641b] hover:bg-[#e85a14] active:bg-[#d44e10] text-white font-extrabold uppercase text-xs tracking-wider px-6 py-3 rounded-lg shadow-md flex items-center gap-1.5"
+            >
+              {isPlacingOrder ? (
+                <span className="flex items-center gap-1.5">
+                  <svg className="animate-spin h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                <span>Place Order →</span>
+              )}
+            </button>
+          </div>
+        )}
 
       </div>
     </div>

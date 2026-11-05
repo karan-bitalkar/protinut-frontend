@@ -25,6 +25,7 @@ import RecipesPage from './pages/RecipesPage';
 import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import LoginPage from './pages/LoginPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
@@ -240,46 +241,15 @@ function AppContent() {
     }
   };
 
-  // ── 1. Add to Cart (Strict Auth Check: if not logged in, prompt modal & save pending action) ──
+  // ── 1. Add to Cart (Direct addition to cart; seamless for all users) ──
   const handleAddToCart = (product) => {
-    if (!isAuthenticated) {
-      toast.error('Please login to add items to cart', {
-        id: 'auth-cart-toast',
-        duration: 3000,
-        style: {
-          background: '#2b1810',
-          color: '#ffffff',
-          borderRadius: '12px',
-          border: '1.5px solid #ef5323',
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: '13px',
-          fontWeight: 700
-        }
-      });
-      setPendingAction({
-        type: 'ADD_TO_CART',
-        product: {
-          id: product.id,
-          name: product.name,
-          selectedWeight: product.selectedWeight || '550gm',
-          finalPrice: product.finalPrice || product.price || 250,
-          originalPrice: product.originalPrice || Math.round((product.finalPrice || product.price || 250) * 1.35),
-          quantity: product.quantity || 1,
-          image: product.image
-        }
-      });
-      setAuthModalMode('login');
-      setIsAuthOpen(true);
-      return false;
-    }
-
     const qty = product.quantity || 1;
     const weight = product.selectedWeight || '550gm';
     const success = contextAddToCart(product, qty, weight);
     return success;
   };
 
-  // ── 2. Buy Now Direct Purchase (Strict Auth Check: if not logged in, prompt modal; if logged in, go straight to checkout) ──
+  // ── 2. Buy Now Direct Purchase (Passes product directly to /checkout) ──
   const handleBuyNow = (product) => {
     const buyNowData = {
       id: product.id,
@@ -291,33 +261,6 @@ function AppContent() {
       image: product.image
     };
 
-    if (!isAuthenticated) {
-      toast.error('Please login to buy now', {
-        id: 'auth-buynow-toast',
-        duration: 3000,
-        style: {
-          background: '#2b1810',
-          color: '#ffffff',
-          borderRadius: '12px',
-          border: '1.5px solid #ef5323',
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: '13px',
-          fontWeight: 700
-        }
-      });
-      setPendingAction({
-        type: 'BUY_NOW',
-        product: buyNowData
-      });
-      try {
-        sessionStorage.setItem('protinut_buy_now_item', JSON.stringify(buyNowData));
-      } catch (e) {}
-      setAuthModalMode('login');
-      setIsAuthOpen(true);
-      return;
-    }
-
-    // Authenticated user: navigate directly to checkout with buyNowItem
     try {
       sessionStorage.setItem('protinut_buy_now_item', JSON.stringify(buyNowData));
     } catch (e) {}
@@ -507,29 +450,22 @@ function AppContent() {
 
           <Route
             path="/checkout"
-            element={
-              <ProtectedRoute>
-                <CheckoutPage />
-              </ProtectedRoute>
-            }
+            element={<CheckoutPage />}
+          />
+
+          <Route
+            path="/order-success"
+            element={<OrderSuccessPage />}
           />
 
           <Route
             path="/orders"
-            element={
-              <ProtectedRoute>
-                <OrdersPage />
-              </ProtectedRoute>
-            }
+            element={<OrdersPage />}
           />
 
           <Route
             path="/orders/:orderId"
-            element={
-              <ProtectedRoute>
-                <OrderDetailPage />
-              </ProtectedRoute>
-            }
+            element={<OrderDetailPage />}
           />
 
           <Route

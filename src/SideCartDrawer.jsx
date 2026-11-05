@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SideCartDrawer.css';
 import logoImg from './assets/protinut-logo.png';
 import InvoiceModal from './InvoiceModal';
@@ -13,6 +14,13 @@ const SideCartDrawer = ({
   onRemoveItem,
   onClearCart,
 }) => {
+  const navigate = useNavigate();
+
+  const handleProceedToCheckout = () => {
+    onClose();
+    navigate('/checkout');
+  };
+
   // Steps: 'cart' -> 'address' -> 'confirm' -> 'payment' -> 'success'
   const [currentStep, setCurrentStep] = useState('cart');
 
@@ -535,7 +543,7 @@ const SideCartDrawer = ({
                 <button
                   type="button"
                   className="btn-proceed-checkout"
-                  onClick={() => setCurrentStep('address')}
+                  onClick={handleProceedToCheckout}
                 >
                   Proceed to Checkout ➔
                 </button>
@@ -1190,7 +1198,7 @@ const SideCartDrawer = ({
             <button
               type="button"
               className="sticky-footer-btn"
-              onClick={() => setCurrentStep('address')}
+              onClick={handleProceedToCheckout}
             >
               Proceed to Checkout ➔
             </button>

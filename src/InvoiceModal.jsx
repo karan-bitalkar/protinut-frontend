@@ -34,17 +34,19 @@ const InvoiceModal = ({ isOpen, onClose, order }) => {
   const items = Array.isArray(order.items) ? order.items : [];
 
   // ── 2. Real Customer & Shipping Details ──
-  const customerName = order.address?.name || user?.name || 'Customer';
-  const customerMobile = order.address?.mobile || user?.phone || '';
+  const customerName = order.address?.name || order.address?.fullName || user?.name || 'Customer';
+  const customerMobile = order.address?.mobile || order.address?.phone || user?.phone || '';
   const customerEmail = order.userEmail || order.address?.email || user?.email || user?.identifier || '';
 
   const addressParts = [
+    order.address?.flatNo,
+    order.address?.street,
     order.address?.addressLine,
     order.address?.city,
     order.address?.state ? `${order.address.state}${order.address?.pincode ? ` - ${order.address.pincode}` : ''}` : null
   ].filter(Boolean);
-
-  const fullAddress = addressParts.length > 0 ? addressParts.join(', ') : 'Delivery address not specified';
+  const uniqueAddressParts = Array.from(new Set(addressParts));
+  const fullAddress = uniqueAddressParts.length > 0 ? uniqueAddressParts.join(', ') : 'Delivery address not specified';
 
   const recipientName = customerName;
   const recipientMobile = customerMobile;
@@ -61,14 +63,20 @@ const InvoiceModal = ({ isOpen, onClose, order }) => {
   const orderStatus = order.status || 'Delivered';
 
   // ── 4. Dynamic Calculations Based ONLY on this specific order's items ──
-  const subtotal = items.reduce((sum, item) => {
-    const price = Number(item.finalPrice ?? item.price ?? 0);
-    const qty = Number(item.quantity ?? 1);
-    return sum + (price * qty);
-  }, 0);
+  const subtotal = order.pricing?.subtotal != null
+    ? Number(order.pricing.subtotal)
+    : items.reduce((sum, item) => {
+        const price = Number(item.finalPrice ?? item.price ?? 0);
+        const qty = Number(item.quantity ?? 1);
+        return sum + (price * qty);
+      }, 0);
 
-  const cgst = Number(((subtotal * 2.5) / 100).toFixed(2));
-  const sgst = Number(((subtotal * 2.5) / 100).toFixed(2));
+  const cgst = order.pricing?.cgst != null
+    ? Number(order.pricing.cgst)
+    : Number(((subtotal * 2.5) / 100).toFixed(2));
+  const sgst = order.pricing?.sgst != null
+    ? Number(order.pricing.sgst)
+    : Number(((subtotal * 2.5) / 100).toFixed(2));
   const delivery = Number(order.pricing?.deliveryCharge || 0);
   const discount = Number(order.pricing?.discount || 0);
   const grandTotal = order.pricing?.grandTotal != null

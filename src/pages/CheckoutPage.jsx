@@ -238,16 +238,16 @@ const CheckoutPage = () => {
               View All Orders
             </Link>
           </div>
-
-          {/* Tax Invoice Modal on Confirmation */}
-          {isInvoiceOpen && placedOrder && (
-            <InvoiceModal
-              isOpen={isInvoiceOpen}
-              onClose={() => setIsInvoiceOpen(false)}
-              order={placedOrder}
-            />
-          )}
         </div>
+
+        {/* Unified Premium Flipkart Style Tax Invoice Modal on Confirmation */}
+        {isInvoiceOpen && placedOrder && (
+          <InvoiceModal
+            isOpen={isInvoiceOpen}
+            onClose={() => setIsInvoiceOpen(false)}
+            order={placedOrder}
+          />
+        )}
       </div>
     );
   }

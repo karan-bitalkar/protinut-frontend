@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './SideCartDrawer.css';
 import logoImg from './assets/protinut-logo.png';
+import InvoiceModal from './InvoiceModal';
 
 const MAX_CART_LIMIT = 5;
 
@@ -62,6 +63,7 @@ const SideCartDrawer = ({
 
   // Placed Order Details
   const [placedOrder, setPlacedOrder] = useState(null);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
 
   // Close on ESC
   useEffect(() => {
@@ -247,10 +249,46 @@ const SideCartDrawer = ({
     if (onClearCart) onClearCart();
   };
 
-  // Download / Print 12% GST Invoice
+  // Open Unified Premium Tax Invoice Modal
   const handleDownloadInvoice = () => {
-    window.print();
+    setIsInvoiceModalOpen(true);
   };
+
+  // Format placed order for the Unified Premium Invoice Modal
+  const invoiceOrderData = placedOrder ? {
+    id: placedOrder.orderId,
+    invoiceNo: placedOrder.invoiceNo,
+    date: placedOrder.orderDate,
+    invoiceDate: placedOrder.orderDate,
+    paymentMethod: placedOrder.paymentSummary,
+    status: 'Delivered',
+    items: (placedOrder.cartItems || []).map((i) => ({
+      id: i.id,
+      name: i.name,
+      quantity: Number(i.quantity || 1),
+      weight: i.selectedWeight || '550gm',
+      finalPrice: Number(i.finalPrice || 0),
+      image: i.image
+    })),
+    address: {
+      name: placedOrder.address?.fullName || placedOrder.address?.name || 'Customer',
+      mobile: placedOrder.address?.phone || placedOrder.address?.mobile || '',
+      addressLine: [placedOrder.address?.flatNo, placedOrder.address?.street].filter(Boolean).join(', ') || placedOrder.address?.addressLine || '',
+      city: placedOrder.address?.city || '',
+      state: placedOrder.address?.state || '',
+      pincode: placedOrder.address?.pincode || ''
+    },
+    userEmail: placedOrder.buyerEmail || '',
+    pricing: {
+      subtotal: Number(placedOrder.subtotal || 0),
+      discount: Number(placedOrder.discountAmount || 0),
+      cgst: Number((placedOrder.subtotal * 0.025).toFixed(2)),
+      sgst: Number((placedOrder.subtotal * 0.025).toFixed(2)),
+      totalGst: Number((placedOrder.subtotal * 0.05).toFixed(2)),
+      deliveryCharge: 0,
+      grandTotal: Number(placedOrder.grandTotal || 0)
+    }
+  } : null;
 
   return (
     <>
@@ -1128,130 +1166,13 @@ const SideCartDrawer = ({
         </div>
       </aside>
 
-      {/* ── Official 12% GST Tax Invoice (Hidden from screen, only prints when 'Download Invoice' is clicked) ── */}
-      {placedOrder && (
-        <div className="printable-tax-invoice invoice-print-only" id="tax-invoice">
-          <div className="invoice-brand-row">
-            <div className="brand-meta">
-              <img src={logoImg} alt="PROTINUT™" className="invoice-logo" />
-              <p><strong>Netizens Nutrition Labs</strong></p>
-              <p>Plot No. 42, Food Tech Zone, Dharashiv, Maharashtra - 413501</p>
-              <p>GSTIN: <strong>27AABCP1234D1Z5</strong> • State: Maharashtra (27)</p>
-              <p>FSSAI Central Lic. No: <strong>10020021000123</strong></p>
-            </div>
-            <div className="invoice-tax-meta">
-              <h3>TAX INVOICE</h3>
-              <p>Invoice No: <strong>{placedOrder.invoiceNo}</strong></p>
-              <p>Date: <strong>{placedOrder.orderDate}</strong></p>
-              <p>Order ID: <strong>#{placedOrder.orderId}</strong></p>
-              <p>Payment: <strong>{placedOrder.paymentSummary}</strong></p>
-            </div>
-          </div>
-
-          <div className="invoice-customer-row">
-            <div className="bill-to-col">
-              <strong>Billed & Shipped To:</strong>
-              <p className="cust-name">{placedOrder.address.fullName}</p>
-              <p>{placedOrder.address.flatNo}, {placedOrder.address.street}</p>
-              <p>{placedOrder.address.city}, {placedOrder.address.state} - {placedOrder.address.pincode}</p>
-              <p>Phone: {placedOrder.address.phone}</p>
-              <p>Email: {placedOrder.buyerEmail}</p>
-            </div>
-            <div className="place-supply-col">
-              <p>Place of Supply: <strong>Maharashtra (27)</strong></p>
-              <p>Reverse Charge: <strong>No</strong></p>
-              <p>Nature of Goods: <strong>Food & Nutrition / Peanut Butter</strong></p>
-            </div>
-          </div>
-
-          <table className="invoice-items-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Product Description</th>
-                <th>HSN Code</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Taxable Value</th>
-                <th>CGST (6%)</th>
-                <th>SGST (6%)</th>
-                <th>Total (₹)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {placedOrder.cartItems.map((item, idx) => {
-                const itemTaxable = ((item.finalPrice * item.quantity) / 1.12).toFixed(2);
-                const itemCgst = ((item.finalPrice * item.quantity - itemTaxable) / 2).toFixed(2);
-                return (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td><strong>{item.name}</strong> ({item.selectedWeight || '550gm'})</td>
-                    <td>20081100</td>
-                    <td>{item.quantity}</td>
-                    <td>₹{item.finalPrice}</td>
-                    <td>₹{itemTaxable}</td>
-                    <td>₹{itemCgst}</td>
-                    <td>₹{itemCgst}</td>
-                    <td><strong>₹{item.finalPrice * item.quantity}</strong></td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          <div className="invoice-totals-section">
-            <div className="invoice-gst-summary">
-              <div className="gst-calc-row">
-                <span>Total Taxable Value:</span>
-                <strong>₹{placedOrder.taxableValue}</strong>
-              </div>
-              <div className="gst-calc-row">
-                <span>CGST @ 6%:</span>
-                <strong>₹{placedOrder.cgst}</strong>
-              </div>
-              <div className="gst-calc-row">
-                <span>SGST @ 6%:</span>
-                <strong>₹{placedOrder.sgst}</strong>
-              </div>
-              <div className="gst-calc-row">
-                <span>Total 12% GST:</span>
-                <strong>₹{placedOrder.totalGst}</strong>
-              </div>
-            </div>
-
-            <div className="invoice-grand-total-box">
-              <div className="inv-row">
-                <span>Subtotal:</span>
-                <span>₹{placedOrder.subtotal}</span>
-              </div>
-              <div className="inv-row">
-                <span>Shipping:</span>
-                <span>FREE</span>
-              </div>
-              {placedOrder.discountAmount > 0 && (
-                <div className="inv-row discount">
-                  <span>Coupon (PRO20):</span>
-                  <span>-₹{placedOrder.discountAmount}</span>
-                </div>
-              )}
-              <div className="inv-row grand">
-                <strong>Invoice Total:</strong>
-                <strong>₹{placedOrder.grandTotal}</strong>
-              </div>
-              <p className="inclusive-tax-note">
-                (Inclusive of 12% GST: ₹{placedOrder.totalGst})
-              </p>
-            </div>
-          </div>
-
-          <div className="invoice-footer-sign">
-            <p>This is a computer-generated tax invoice. No signature required.</p>
-            <div className="authorized-signatory">
-              <span className="sign-stamp">PROTINUT™ VERIFIED</span>
-              <strong>Authorized Signatory</strong>
-            </div>
-          </div>
-        </div>
+      {/* ── Unified Premium Flipkart Style Tax Invoice Modal ── */}
+      {isInvoiceModalOpen && invoiceOrderData && (
+        <InvoiceModal
+          isOpen={isInvoiceModalOpen}
+          onClose={() => setIsInvoiceModalOpen(false)}
+          order={invoiceOrderData}
+        />
       )}
     </>
   );

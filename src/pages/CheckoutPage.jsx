@@ -33,7 +33,14 @@ const CheckoutPage = () => {
   const location = useLocation();
 
   // Buy Now direct purchase support (does not modify persistent cart)
-  const buyNowItem = location.state?.buyNowItem;
+  const buyNowItem = location.state?.buyNowItem || (() => {
+    try {
+      const saved = sessionStorage.getItem('protinut_buy_now_item');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  })();
   const activeItems = buyNowItem ? [buyNowItem] : cartItems;
   const activeCount = buyNowItem ? (buyNowItem.quantity || 1) : totalCartCount;
   const activeSubtotal = buyNowItem 
@@ -164,6 +171,8 @@ const CheckoutPage = () => {
       // Only clear cart if this was a cart checkout (do not wipe cart on direct Buy Now purchase)
       if (!buyNowItem) {
         clearCart();
+      } else {
+        try { sessionStorage.removeItem('protinut_buy_now_item'); } catch (e) {}
       }
       setIsPlacingOrder(false);
       setPlacedOrder(order);

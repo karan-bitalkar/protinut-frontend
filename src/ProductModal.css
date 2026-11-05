@@ -368,6 +368,27 @@
   box-shadow: 0 8px 22px rgba(239, 83, 35, 0.48);
 }
 
+.modal-btn-buy-now {
+  padding: 12px 22px;
+  border-radius: 9999px;
+  border: 2px solid #ef5323;
+  background: #fff6f2;
+  color: #ef5323;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.modal-btn-buy-now:hover {
+  background: #ef5323;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(239, 83, 35, 0.35);
+}
+
 /* Notify Form */
 .modal-notify-form {
   margin-bottom: 18px;

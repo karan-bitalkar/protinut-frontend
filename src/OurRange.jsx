@@ -234,6 +234,7 @@ const categoryTabs = [
 
 const OurRange = ({
   onAddToCart,
+  onBuyNow,
   onQuickView,
   wishlistItems = [],
   onToggleWishlist
@@ -255,6 +256,33 @@ const OurRange = ({
 
   const toggleWeight = (productId, weightOptionId) => {
     setSelectedWeights((prev) => ({ ...prev, [productId]: weightOptionId }));
+  };
+
+  const handleBuyNowClick = (product) => {
+    if (!product.inStock) {
+      if (onQuickView) {
+        onQuickView({ ...product, isAvailable: false });
+      } else {
+        toast(`We will notify you when ${product.name} is available!`, {
+          icon: '🔔',
+          duration: 2500
+        });
+      }
+      return;
+    }
+
+    const activeWeightId = selectedWeights[product.id] || product.defaultWeight;
+    const matchedOption = product.weightOptions.find((w) => w.id === activeWeightId) || product.weightOptions[0];
+    const finalPrice = matchedOption.price;
+
+    if (onBuyNow) {
+      onBuyNow({
+        ...product,
+        selectedWeight: matchedOption.label,
+        finalPrice: finalPrice,
+        quantity: 1
+      });
+    }
   };
 
   const handleAddToCartClick = (product) => {
@@ -596,30 +624,40 @@ const OurRange = ({
 
                     {/* Add to Cart CTA OR Notify Me Button */}
                     {isAvailable ? (
-                      <button
-                        type="button"
-                        className={`btn-add-to-cart ${isAdded ? 'success' : ''}`}
-                        onClick={() => handleAddToCartClick(item)}
-                        aria-label={`Add ${item.name} to cart`}
-                      >
-                        {isAdded ? (
-                          <>
-                            <svg className="cart-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            <span>Added to Cart!</span>
-                          </>
-                        ) : (
-                          <>
-                            <svg className="cart-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="9" cy="21" r="1.5" />
-                              <circle cx="19" cy="21" r="1.5" />
-                              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                            </svg>
-                            <span>Add To Cart</span>
-                          </>
-                        )}
-                      </button>
+                      <div className="card-cta-btn-group">
+                        <button
+                          type="button"
+                          className={`btn-add-to-cart ${isAdded ? 'success' : ''}`}
+                          onClick={() => handleAddToCartClick(item)}
+                          aria-label={`Add ${item.name} to cart`}
+                        >
+                          {isAdded ? (
+                            <>
+                              <svg className="cart-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              <span>Added</span>
+                            </>
+                          ) : (
+                            <>
+                              <svg className="cart-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="9" cy="21" r="1.5" />
+                                <circle cx="19" cy="21" r="1.5" />
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                              </svg>
+                              <span>Add to Cart</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-card-buy-now"
+                          onClick={() => handleBuyNowClick(item)}
+                          aria-label={`Buy ${item.name} now`}
+                        >
+                          ⚡ Buy Now
+                        </button>
+                      </div>
                     ) : (
                       <button
                         type="button"

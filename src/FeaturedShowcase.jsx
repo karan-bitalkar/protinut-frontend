@@ -89,6 +89,7 @@ const featuredProducts = [
 
 const FeaturedShowcase = ({
   onAddToCart,
+  onBuyNow,
   onQuickView,
   wishlistItems = [],
   onToggleWishlist
@@ -127,6 +128,25 @@ const FeaturedShowcase = ({
         id: prod.id,
         name: prod.name,
         selectedWeight: weight,
+        finalPrice: price,
+        quantity: qty,
+        image: prod.image
+      });
+    }
+  };
+
+  const handleBuyNowClick = (prod) => {
+    const weight = selectedWeights[prod.id] || '550gm';
+    const price = weight === '1kg' ? prod.price1kg : prod.price550;
+    const original = weight === '1kg' ? prod.originalPrice1kg : prod.originalPrice550;
+    const qty = quantities[prod.id] || 1;
+
+    if (onBuyNow) {
+      onBuyNow({
+        id: prod.id,
+        name: prod.name,
+        selectedWeight: weight,
+        originalPrice: original,
         finalPrice: price,
         quantity: qty,
         image: prod.image
@@ -337,6 +357,14 @@ const FeaturedShowcase = ({
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                       </svg>
                       Add To Cart
+                    </button>
+
+                    <button
+                      type="button"
+                      className="pane-btn-buy-now"
+                      onClick={() => handleBuyNowClick(prod)}
+                    >
+                      ⚡ Buy Now
                     </button>
 
                     <button
@@ -617,6 +645,14 @@ const FeaturedShowcase = ({
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                       </svg>
                       Add To Cart
+                    </button>
+
+                    <button
+                      type="button"
+                      className="pane-btn-buy-now"
+                      onClick={() => handleBuyNowClick(prod)}
+                    >
+                      ⚡ Buy Now
                     </button>
 
                     <button

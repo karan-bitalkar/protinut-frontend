@@ -66,6 +66,7 @@ const productsDatabase = {
 
 const ProductDetailPage = ({
   onAddToCart,
+  onBuyNow,
   onToggleWishlist,
   wishlistItems = []
 }) => {
@@ -106,20 +107,23 @@ const ProductDetailPage = ({
   };
 
   const handleBuyNowClick = () => {
-    // Pass directly to checkout as a direct purchase without altering persistent cart
-    navigate('/checkout', {
-      state: {
-        buyNowItem: {
-          id: product.id,
-          name: product.name,
-          selectedWeight: selectedWeight,
-          originalPrice: originalPrice,
-          finalPrice: currentPrice,
-          quantity: quantity,
-          image: product.image
-        }
-      }
-    });
+    const itemData = {
+      id: product.id,
+      name: product.name,
+      selectedWeight: selectedWeight,
+      originalPrice: originalPrice,
+      finalPrice: currentPrice,
+      quantity: quantity,
+      image: product.image
+    };
+
+    if (onBuyNow) {
+      onBuyNow(itemData);
+    } else {
+      navigate('/checkout', {
+        state: { buyNowItem: itemData }
+      });
+    }
   };
 
   return (

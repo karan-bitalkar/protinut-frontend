@@ -5,6 +5,7 @@ import './Pages.css';
 
 const ProductsPage = ({
   onAddToCart,
+  onBuyNow,
   onQuickView,
   wishlistItems = [],
   onToggleWishlist
@@ -50,6 +51,7 @@ const ProductsPage = ({
       {/* Modern Product Catalog with Filters and Dual Weight Selectors */}
       <OurRange
         onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
         onQuickView={onQuickView}
         wishlistItems={wishlistItems}
         onToggleWishlist={onToggleWishlist}

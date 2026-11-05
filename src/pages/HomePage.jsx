@@ -9,6 +9,7 @@ import Testimonials from '../Testimonials';
 
 const HomePage = ({
   onAddToCart,
+  onBuyNow,
   onQuickView,
   wishlistItems = [],
   onToggleWishlist
@@ -24,6 +25,7 @@ const HomePage = ({
       {/* Featured Products Showcase (Deep dive into the 2 signature jars) */}
       <FeaturedShowcase
         onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
         onQuickView={onQuickView}
         wishlistItems={wishlistItems}
         onToggleWishlist={onToggleWishlist}
@@ -32,6 +34,7 @@ const HomePage = ({
       {/* Complete Product Catalog Grid with Filters & Dual Sizes */}
       <OurRange
         onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
         onQuickView={onQuickView}
         wishlistItems={wishlistItems}
         onToggleWishlist={onToggleWishlist}

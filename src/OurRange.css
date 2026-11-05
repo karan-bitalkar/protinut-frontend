@@ -614,6 +614,58 @@
   font-weight: 700;
 }
 
+/* Add To Cart & Buy Now CTA Button Group */
+.card-cta-btn-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.card-cta-btn-group .btn-add-to-cart {
+  flex: 1;
+  padding: 11px 12px;
+  font-size: 12.5px;
+  border-radius: 12px;
+}
+
+.btn-card-buy-now {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #ef5323;
+  border: 1.5px solid #ef5323;
+  padding: 11px 12px;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-card-buy-now:hover {
+  background: #ef5323;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(239, 83, 35, 0.35);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .card-cta-btn-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .card-cta-btn-group .btn-add-to-cart,
+  .btn-card-buy-now {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 11.5px;
+  }
+}
+
 /* Add To Cart CTA Button */
 .btn-add-to-cart {
   width: 100%;

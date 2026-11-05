@@ -5,6 +5,7 @@ const ProductModal = ({
   product,
   onClose,
   onAddToCart,
+  onBuyNow,
   wishlistItems = [],
   onToggleWishlist
 }) => {
@@ -203,6 +204,24 @@ const ProductModal = ({
                   }}
                 >
                   🛒 Add to Cart • ₹{currentPrice * quantity}
+                </button>
+
+                <button
+                  type="button"
+                  className="modal-btn-buy-now"
+                  onClick={() => {
+                    if (onBuyNow) {
+                      onBuyNow({
+                        ...product,
+                        selectedWeight,
+                        quantity,
+                        finalPrice: currentPrice
+                      });
+                    }
+                    onClose();
+                  }}
+                >
+                  ⚡ Buy Now
                 </button>
               </div>
             ) : (

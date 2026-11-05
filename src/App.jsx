@@ -57,6 +57,28 @@ function AppContent() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login');
 
+  // Pending user action triggered before login (ADD_TO_CART or BUY_NOW)
+  const [pendingAction, setPendingAction] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('protinut_pending_action');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  React.useEffect(() => {
+    if (pendingAction) {
+      try {
+        sessionStorage.setItem('protinut_pending_action', JSON.stringify(pendingAction));
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      sessionStorage.removeItem('protinut_pending_action');
+    }
+  }, [pendingAction]);
+
   // Automatically open the modal if route or query indicates auth
   React.useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -182,13 +204,126 @@ function AppContent() {
     setWishlistItems([]);
   };
 
-  // ── Add to Cart (Allows browsing & adding to cart seamlessly, updates toast, stays on page) ──
+  // ── Centralized Login Success Handler (Fulfills pending Add to Cart or Buy Now) ──
+  const handleLoginSuccess = (loggedInUser) => {
+    setIsAuthOpen(false);
+    const displayName = loggedInUser?.name || 'Customer';
+    toast.success(`Welcome, ${displayName}!`, {
+      duration: 2500,
+      style: {
+        background: '#15803d',
+        color: '#ffffff',
+        borderRadius: '12px',
+        fontFamily: "'Montserrat', sans-serif",
+        fontSize: '13px',
+        fontWeight: 700
+      }
+    });
+
+    if (pendingAction) {
+      if (pendingAction.type === 'ADD_TO_CART') {
+        const prod = pendingAction.product;
+        const qty = prod.quantity || 1;
+        const weight = prod.selectedWeight || '550gm';
+        contextAddToCart(prod, qty, weight);
+      } else if (pendingAction.type === 'BUY_NOW') {
+        const prod = pendingAction.product;
+        try {
+          sessionStorage.setItem('protinut_buy_now_item', JSON.stringify(prod));
+        } catch (e) {}
+        navigate('/checkout', {
+          state: { buyNowItem: prod }
+        });
+      }
+      setPendingAction(null);
+    }
+  };
+
+  // ── 1. Add to Cart (Strict Auth Check: if not logged in, prompt modal & save pending action) ──
   const handleAddToCart = (product) => {
+    if (!isAuthenticated) {
+      toast.error('Please login to add items to cart', {
+        id: 'auth-cart-toast',
+        duration: 3000,
+        style: {
+          background: '#2b1810',
+          color: '#ffffff',
+          borderRadius: '12px',
+          border: '1.5px solid #ef5323',
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: '13px',
+          fontWeight: 700
+        }
+      });
+      setPendingAction({
+        type: 'ADD_TO_CART',
+        product: {
+          id: product.id,
+          name: product.name,
+          selectedWeight: product.selectedWeight || '550gm',
+          finalPrice: product.finalPrice || product.price || 250,
+          originalPrice: product.originalPrice || Math.round((product.finalPrice || product.price || 250) * 1.35),
+          quantity: product.quantity || 1,
+          image: product.image
+        }
+      });
+      setAuthModalMode('login');
+      setIsAuthOpen(true);
+      return false;
+    }
+
     const qty = product.quantity || 1;
     const weight = product.selectedWeight || '550gm';
     const success = contextAddToCart(product, qty, weight);
-    // User stays on the product page with instant 2.5s Toast feedback (like Flipkart)
     return success;
+  };
+
+  // ── 2. Buy Now Direct Purchase (Strict Auth Check: if not logged in, prompt modal; if logged in, go straight to checkout) ──
+  const handleBuyNow = (product) => {
+    const buyNowData = {
+      id: product.id,
+      name: product.name,
+      selectedWeight: product.selectedWeight || '550gm',
+      originalPrice: product.originalPrice || Math.round((product.finalPrice || product.price || 250) * 1.35),
+      finalPrice: product.finalPrice || product.price || 250,
+      quantity: product.quantity || 1,
+      image: product.image
+    };
+
+    if (!isAuthenticated) {
+      toast.error('Please login to buy now', {
+        id: 'auth-buynow-toast',
+        duration: 3000,
+        style: {
+          background: '#2b1810',
+          color: '#ffffff',
+          borderRadius: '12px',
+          border: '1.5px solid #ef5323',
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: '13px',
+          fontWeight: 700
+        }
+      });
+      setPendingAction({
+        type: 'BUY_NOW',
+        product: buyNowData
+      });
+      try {
+        sessionStorage.setItem('protinut_buy_now_item', JSON.stringify(buyNowData));
+      } catch (e) {}
+      setAuthModalMode('login');
+      setIsAuthOpen(true);
+      return;
+    }
+
+    // Authenticated user: navigate directly to checkout with buyNowItem
+    try {
+      sessionStorage.setItem('protinut_buy_now_item', JSON.stringify(buyNowData));
+    } catch (e) {}
+
+    navigate('/checkout', {
+      state: { buyNowItem: buyNowData }
+    });
   };
 
   const handleOpenQuickView = (product) => {
@@ -271,6 +406,7 @@ function AppContent() {
             element={
               <HomePage
                 onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
                 onQuickView={handleOpenQuickView}
                 wishlistItems={wishlistItems}
                 onToggleWishlist={handleToggleWishlist}
@@ -284,7 +420,30 @@ function AppContent() {
             element={
               <ProductsPage
                 onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
                 onQuickView={handleOpenQuickView}
+                wishlistItems={wishlistItems}
+                onToggleWishlist={handleToggleWishlist}
+              />
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <ProductDetailPage
+                onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
+                wishlistItems={wishlistItems}
+                onToggleWishlist={handleToggleWishlist}
+              />
+            }
+          />
+          <Route
+            path="/product/:id"
+            element={
+              <ProductDetailPage
+                onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
                 wishlistItems={wishlistItems}
                 onToggleWishlist={handleToggleWishlist}
               />
@@ -298,11 +457,7 @@ function AppContent() {
             path="/login"
             element={
               <LoginPage
-                onLoginSuccess={(userObj) => {
-                  toast.success(`Welcome, ${userObj?.name || 'back'}!`, {
-                    style: { background: '#15803d', color: '#fff', borderRadius: '12px', fontFamily: "'Montserrat',sans-serif", fontSize: '13px', fontWeight: 700 }
-                  });
-                }}
+                onLoginSuccess={handleLoginSuccess}
               />
             }
           />
@@ -311,11 +466,7 @@ function AppContent() {
             element={
               <LoginPage
                 initialMode="register"
-                onLoginSuccess={(userObj) => {
-                  toast.success(`Welcome, ${userObj?.name || 'back'}!`, {
-                    style: { background: '#15803d', color: '#fff', borderRadius: '12px', fontFamily: "'Montserrat',sans-serif", fontSize: '13px', fontWeight: 700 }
-                  });
-                }}
+                onLoginSuccess={handleLoginSuccess}
               />
             }
           />
@@ -324,11 +475,7 @@ function AppContent() {
             element={
               <LoginPage
                 initialMode="register"
-                onLoginSuccess={(userObj) => {
-                  toast.success(`Welcome, ${userObj?.name || 'back'}!`, {
-                    style: { background: '#15803d', color: '#fff', borderRadius: '12px', fontFamily: "'Montserrat',sans-serif", fontSize: '13px', fontWeight: 700 }
-                  });
-                }}
+                onLoginSuccess={handleLoginSuccess}
               />
             }
           />
@@ -504,6 +651,7 @@ function AppContent() {
           product={activeModalProduct}
           onClose={handleCloseQuickView}
           onAddToCart={handleAddToCart}
+          onBuyNow={handleBuyNow}
           wishlistItems={wishlistItems}
           onToggleWishlist={handleToggleWishlist}
         />
@@ -514,10 +662,7 @@ function AppContent() {
         isOpen={isAuthOpen}
         defaultMode={authModalMode}
         onClose={() => setIsAuthOpen(false)}
-        onLoginSuccess={(loggedInUser) => {
-          setIsAuthOpen(false);
-          toast.success(`Welcome, ${loggedInUser.name}!`);
-        }}
+        onLoginSuccess={handleLoginSuccess}
       />
 
       {/* Fixed Native Mobile Bottom Navigation Bar (< 768px) */}

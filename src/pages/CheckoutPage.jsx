@@ -62,22 +62,42 @@ const CheckoutPage = () => {
   }, []);
 
   // ── Address State ──
-  const [address, setAddress] = useState({
-    name: user?.name || 'Karan Bitalikar',
-    mobile: user?.phone || '9876543210',
-    pincode: '411035',
-    city: 'Pune',
-    state: 'Maharashtra',
-    addressLine: 'Flat 101, Blossom Residency, Akurdi Station Road'
+  const [address, setAddress] = useState(() => {
+    try {
+      const saved = localStorage.getItem('protinut_delivery_address');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.name && parsed.mobile && parsed.pincode && parsed.city && parsed.addressLine) {
+          return parsed;
+        }
+      }
+    } catch {}
+    return {
+      name: user?.name || '',
+      mobile: (user?.phone || '').replace(/\D/g, ''),
+      pincode: '',
+      city: '',
+      state: 'Maharashtra',
+      addressLine: ''
+    };
   });
 
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [tempAddress, setTempAddress] = useState({ ...address });
+  const isInitialAddressComplete = Boolean(
+    address.name?.trim() &&
+    address.mobile?.replace(/\D/g, '').length === 10 &&
+    address.pincode?.trim().length === 6 &&
+    address.city?.trim() &&
+    address.state?.trim() &&
+    address.addressLine?.trim()
+  );
+
+  const [isEditingAddress, setIsEditingAddress] = useState(!isInitialAddressComplete);
   const [addressErrors, setAddressErrors] = useState({});
 
-  // ── Payment State ──
-  // Options: 'upi', 'card', 'netbanking', 'cod'
-  const [paymentMethod, setPaymentMethod] = useState('upi');
+  // ── Payment State (unselected by default for strict validation) ──
+  // Options: 'upi', 'card', 'netbanking', 'cod' or ''
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [paymentError, setPaymentError] = useState('');
 
   // UPI sub-options
   const [upiType, setUpiType] = useState('phonepe');
@@ -97,83 +117,131 @@ const CheckoutPage = () => {
   // COD Captcha
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaCode, setCaptchaCode] = useState('8392');
+  const [codError, setCodError] = useState('');
 
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [placedOrder, setPlacedOrder] = useState(null);
   const [isInvoiceOpen, setIsInvoiceOpen] = useState(false);
 
-  const validateAddressForm = () => {
-    const errors = {};
-    if (!tempAddress.name.trim()) errors.name = 'Name is required';
-    if (!tempAddress.mobile.trim() || !/^\d{10}$/.test(tempAddress.mobile.replace(/\D/g, ''))) {
-      errors.mobile = 'Enter a valid 10-digit mobile number';
+  const handleAddressChange = (field, value) => {
+    setAddress((prev) => ({ ...prev, [field]: value }));
+    if (addressErrors[field]) {
+      setAddressErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
     }
-    if (!tempAddress.pincode.trim() || !/^\d{6}$/.test(tempAddress.pincode.trim())) {
+  };
+
+  const validateAddress = () => {
+    const errors = {};
+    if (!address.name?.trim()) {
+      errors.name = 'Full Name is required';
+    }
+    const cleanMobile = (address.mobile || '').replace(/\D/g, '');
+    if (!cleanMobile) {
+      errors.mobile = 'Mobile Number is required';
+    } else if (cleanMobile.length !== 10) {
+      errors.mobile = 'Mobile Number must be exactly 10 digits';
+    }
+    if (!address.pincode?.trim()) {
+      errors.pincode = 'Pincode is required';
+    } else if (!/^\d{6}$/.test(address.pincode.trim())) {
       errors.pincode = 'Enter a valid 6-digit Pincode';
     }
-    if (!tempAddress.city.trim()) errors.city = 'City is required';
-    if (!tempAddress.state.trim()) errors.state = 'State is required';
-    if (!tempAddress.addressLine.trim()) errors.addressLine = 'Address line is required';
+    if (!address.city?.trim()) {
+      errors.city = 'City is required';
+    }
+    if (!address.state?.trim()) {
+      errors.state = 'State is required';
+    }
+    if (!address.addressLine?.trim()) {
+      errors.addressLine = 'Address Line is required';
+    }
 
     setAddressErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSaveAddress = (e) => {
-    e.preventDefault();
-    if (validateAddressForm()) {
-      setAddress({ ...tempAddress });
+    if (e) e.preventDefault();
+    if (validateAddress()) {
       setIsEditingAddress(false);
-      toast.success('Delivery address updated!');
+      try {
+        localStorage.setItem('protinut_delivery_address', JSON.stringify(address));
+      } catch {}
+      toast.success('Delivery address saved!');
+    } else {
+      toast.error('Please fix errors in delivery address');
+    }
+  };
+
+  const handlePaymentSelect = (method) => {
+    setPaymentMethod(method);
+    setPaymentError('');
+    if (method !== 'cod') {
+      setCodError('');
     }
   };
 
   const handlePlaceOrder = () => {
-    // 1. Commit address if currently editing
-    let finalAddress = { ...address };
-    if (isEditingAddress) {
-      if (!validateAddressForm()) {
-        toast.error('Please complete all required fields in the delivery address!');
+    // Reset previous errors
+    setPaymentError('');
+    setCodError('');
+
+    // 1. Strict Address Validation
+    const isAddressValid = validateAddress();
+    if (!isAddressValid) {
+      setIsEditingAddress(true);
+      toast.error('Please complete all required fields in the delivery address!');
+      const addressEl = document.getElementById('address-section');
+      if (addressEl) {
+        addressEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    // 2. Strict Payment Method Validation
+    if (!paymentMethod) {
+      setPaymentError('Please select a payment method.');
+      toast.error('Please select a payment method.', { id: 'payment-error-toast' });
+      const paymentEl = document.getElementById('payment-section');
+      if (paymentEl) {
+        paymentEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    // 3. Strict COD Captcha Verification (if user selects COD)
+    if (paymentMethod === 'cod') {
+      if (!captchaInput.trim()) {
+        setCodError('Please enter the 4-digit code shown above');
+        toast.error('Please enter the 4-digit verification code for COD.');
+        const codEl = document.getElementById('cod-section');
+        if (codEl) {
+          codEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
-      finalAddress = { ...tempAddress };
-      setAddress({ ...tempAddress });
-      setIsEditingAddress(false);
+      if (captchaInput.trim() !== captchaCode) {
+        setCodError('Incorrect code. Please enter the exact 4 digits shown.');
+        toast.error('Invalid verification code for Cash on Delivery.');
+        return;
+      }
     }
 
-    // 2. Validate that delivery address is filled
-    if (
-      !finalAddress.name?.trim() ||
-      !finalAddress.mobile?.trim() ||
-      !finalAddress.addressLine?.trim() ||
-      !finalAddress.pincode?.trim() ||
-      !finalAddress.city?.trim()
-    ) {
-      toast.error('Please complete your delivery address before placing your order!');
-      setIsEditingAddress(true);
-      return;
-    }
-
-    // 3. Validate payment method
-    if (!paymentMethod) {
-      toast.error('Please select a payment method!');
-      return;
-    }
-
-    // 4. Validate items
+    // 4. Cart / Items Validation
     if (activeItems.length === 0) {
       toast.error('No items to checkout! Please add products to cart.');
       navigate('/products');
       return;
     }
 
-    // For COD, if user hasn't typed captcha yet, auto-match for seamless simulated testing
-    if (paymentMethod === 'cod') {
-      if (captchaInput.trim() && captchaInput.trim() !== captchaCode) {
-        toast.error('Invalid Captcha code for Cash on Delivery!');
-        return;
-      }
-    }
+    // Save validated address to localStorage
+    try {
+      localStorage.setItem('protinut_delivery_address', JSON.stringify(address));
+    } catch {}
 
     let paymentLabel = 'Cash on Delivery (COD)';
     if (paymentMethod === 'upi') {
@@ -190,7 +258,7 @@ const CheckoutPage = () => {
     setTimeout(() => {
       const order = placeOrder({
         items: activeItems,
-        address: finalAddress,
+        address,
         paymentMethod: paymentLabel,
         subtotal: activeSubtotal,
         discount: activeDiscount,
@@ -199,7 +267,7 @@ const CheckoutPage = () => {
         totalGst: activeTotalGst,
         deliveryCharge: activeDeliveryCharge,
         grandTotal: activeGrandTotal,
-        userEmail: user?.email || user?.identifier || `${finalAddress.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
+        userEmail: user?.email || user?.identifier || `${address.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
       });
 
       // Clear the cart
@@ -213,9 +281,9 @@ const CheckoutPage = () => {
       if (!user && login) {
         try {
           login({
-            name: finalAddress.name,
-            phone: finalAddress.mobile,
-            email: `${finalAddress.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
+            name: address.name,
+            phone: address.mobile,
+            email: `${address.name.toLowerCase().replace(/\s+/g, '')}@protinut.in`
           });
         } catch (e) {}
       }
@@ -372,7 +440,7 @@ const CheckoutPage = () => {
             </div>
 
             {/* Step 2: Delivery Address Form */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div id="address-section" className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-4 bg-[#2874f0] text-white flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded bg-white text-[#2874f0] text-xs font-black flex items-center justify-center">
@@ -384,8 +452,8 @@ const CheckoutPage = () => {
                 </div>
                 {!isEditingAddress && (
                   <button
+                    type="button"
                     onClick={() => {
-                      setTempAddress({ ...address });
                       setIsEditingAddress(true);
                     }}
                     className="text-xs font-bold bg-white text-[#2874f0] hover:bg-gray-100 px-3 py-1 rounded transition"
@@ -406,15 +474,17 @@ const CheckoutPage = () => {
                         </label>
                         <input
                           type="text"
-                          value={tempAddress.name}
-                          onChange={(e) => setTempAddress({ ...tempAddress, name: e.target.value })}
+                          value={address.name}
+                          onChange={(e) => handleAddressChange('name', e.target.value)}
                           className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                             addressErrors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder="e.g. Karan Bitalikar"
                         />
                         {addressErrors.name && (
-                          <span className="text-xs text-red-600 font-semibold">{addressErrors.name}</span>
+                          <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                            <span>⚠️</span> {addressErrors.name}
+                          </p>
                         )}
                       </div>
 
@@ -426,15 +496,17 @@ const CheckoutPage = () => {
                         <input
                           type="tel"
                           maxLength={10}
-                          value={tempAddress.mobile}
-                          onChange={(e) => setTempAddress({ ...tempAddress, mobile: e.target.value })}
+                          value={address.mobile}
+                          onChange={(e) => handleAddressChange('mobile', e.target.value.replace(/\D/g, ''))}
                           className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                             addressErrors.mobile ? 'border-red-500 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder="e.g. 9876543210"
                         />
                         {addressErrors.mobile && (
-                          <span className="text-xs text-red-600 font-semibold">{addressErrors.mobile}</span>
+                          <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                            <span>⚠️</span> {addressErrors.mobile}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -448,15 +520,17 @@ const CheckoutPage = () => {
                         <input
                           type="text"
                           maxLength={6}
-                          value={tempAddress.pincode}
-                          onChange={(e) => setTempAddress({ ...tempAddress, pincode: e.target.value })}
+                          value={address.pincode}
+                          onChange={(e) => handleAddressChange('pincode', e.target.value.replace(/\D/g, ''))}
                           className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                             addressErrors.pincode ? 'border-red-500 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder="e.g. 411035"
                         />
                         {addressErrors.pincode && (
-                          <span className="text-xs text-red-600 font-semibold">{addressErrors.pincode}</span>
+                          <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                            <span>⚠️</span> {addressErrors.pincode}
+                          </p>
                         )}
                       </div>
 
@@ -467,15 +541,17 @@ const CheckoutPage = () => {
                         </label>
                         <input
                           type="text"
-                          value={tempAddress.city}
-                          onChange={(e) => setTempAddress({ ...tempAddress, city: e.target.value })}
+                          value={address.city}
+                          onChange={(e) => handleAddressChange('city', e.target.value)}
                           className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                             addressErrors.city ? 'border-red-500 bg-red-50' : 'border-gray-300'
                           }`}
                           placeholder="e.g. Pune"
                         />
                         {addressErrors.city && (
-                          <span className="text-xs text-red-600 font-semibold">{addressErrors.city}</span>
+                          <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                            <span>⚠️</span> {addressErrors.city}
+                          </p>
                         )}
                       </div>
 
@@ -485,33 +561,43 @@ const CheckoutPage = () => {
                           State *
                         </label>
                         <select
-                          value={tempAddress.state}
-                          onChange={(e) => setTempAddress({ ...tempAddress, state: e.target.value })}
-                          className="w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                          value={address.state}
+                          onChange={(e) => handleAddressChange('state', e.target.value)}
+                          className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white ${
+                            addressErrors.state ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                          }`}
                         >
+                          <option value="">Select State</option>
                           {INDIAN_STATES.map((st) => (
                             <option key={st} value={st}>{st}</option>
                           ))}
                         </select>
+                        {addressErrors.state && (
+                          <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                            <span>⚠️</span> {addressErrors.state}
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     {/* Address Line */}
                     <div>
                       <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                        Address (House No, Building, Street, Area) *
+                        Address Line (House No, Building, Street, Area) *
                       </label>
                       <textarea
                         rows={2}
-                        value={tempAddress.addressLine}
-                        onChange={(e) => setTempAddress({ ...tempAddress, addressLine: e.target.value })}
+                        value={address.addressLine}
+                        onChange={(e) => handleAddressChange('addressLine', e.target.value)}
                         className={`w-full px-3.5 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                           addressErrors.addressLine ? 'border-red-500 bg-red-50' : 'border-gray-300'
                         }`}
                         placeholder="e.g. Flat 101, Blossom Residency, Akurdi Station Road"
                       />
                       {addressErrors.addressLine && (
-                        <span className="text-xs text-red-600 font-semibold">{addressErrors.addressLine}</span>
+                        <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                          <span>⚠️</span> {addressErrors.addressLine}
+                        </p>
                       )}
                     </div>
 
@@ -522,13 +608,15 @@ const CheckoutPage = () => {
                       >
                         Save & Deliver Here
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsEditingAddress(false)}
-                        className="text-xs font-bold text-gray-500 hover:text-gray-800 px-4 py-2"
-                      >
-                        Cancel
-                      </button>
+                      {isInitialAddressComplete && (
+                        <button
+                          type="button"
+                          onClick={() => setIsEditingAddress(false)}
+                          className="text-xs font-bold text-gray-500 hover:text-gray-800 px-4 py-2"
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </div>
                   </form>
                 ) : (
@@ -591,15 +679,29 @@ const CheckoutPage = () => {
             </div>
 
             {/* Step 4: Payment Options (Radio Buttons) */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 bg-[#2874f0] text-white flex items-center gap-3">
-                <span className="w-6 h-6 rounded bg-white text-[#2874f0] text-xs font-black flex items-center justify-center">
-                  3
-                </span>
-                <span className="text-sm font-bold uppercase tracking-wider">
-                  Payment Options
-                </span>
+            <div id="payment-section" className={`bg-white rounded-lg shadow-sm border transition-colors overflow-hidden ${paymentError ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-200'}`}>
+              <div className="p-4 bg-[#2874f0] text-white flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded bg-white text-[#2874f0] text-xs font-black flex items-center justify-center">
+                    3
+                  </span>
+                  <span className="text-sm font-bold uppercase tracking-wider">
+                    Payment Options
+                  </span>
+                </div>
+                {paymentError && (
+                  <span className="text-xs font-bold bg-red-600 text-white px-2 py-0.5 rounded animate-pulse">
+                    Selection Required
+                  </span>
+                )}
               </div>
+
+              {paymentError && (
+                <div className="m-4 mb-0 p-3.5 bg-red-50 border border-red-300 rounded-lg text-xs font-bold text-red-700 flex items-center gap-2">
+                  <span className="text-sm">⚠️</span>
+                  <span>{paymentError}</span>
+                </div>
+              )}
 
               <div className="divide-y divide-gray-200">
                 
@@ -611,7 +713,7 @@ const CheckoutPage = () => {
                       name="payment_option"
                       value="upi"
                       checked={paymentMethod === 'upi'}
-                      onChange={() => setPaymentMethod('upi')}
+                      onChange={() => handlePaymentSelect('upi')}
                       className="mt-1 text-primary focus:ring-primary w-4 h-4"
                     />
                     <div className="flex-1">
@@ -672,7 +774,7 @@ const CheckoutPage = () => {
                       name="payment_option"
                       value="card"
                       checked={paymentMethod === 'card'}
-                      onChange={() => setPaymentMethod('card')}
+                      onChange={() => handlePaymentSelect('card')}
                       className="mt-1 text-primary focus:ring-primary w-4 h-4"
                     />
                     <div className="flex-1">
@@ -724,7 +826,7 @@ const CheckoutPage = () => {
                       name="payment_option"
                       value="netbanking"
                       checked={paymentMethod === 'netbanking'}
-                      onChange={() => setPaymentMethod('netbanking')}
+                      onChange={() => handlePaymentSelect('netbanking')}
                       className="mt-1 text-primary focus:ring-primary w-4 h-4"
                     />
                     <div className="flex-1">
@@ -751,14 +853,14 @@ const CheckoutPage = () => {
                 </div>
 
                 {/* 4. Cash on Delivery (COD) */}
-                <div className={`p-4 transition-colors ${paymentMethod === 'cod' ? 'bg-orange-50/40' : 'hover:bg-gray-50'}`}>
+                <div id="cod-section" className={`p-4 transition-colors ${paymentMethod === 'cod' ? 'bg-orange-50/40' : 'hover:bg-gray-50'}`}>
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="radio"
                       name="payment_option"
                       value="cod"
                       checked={paymentMethod === 'cod'}
-                      onChange={() => setPaymentMethod('cod')}
+                      onChange={() => handlePaymentSelect('cod')}
                       className="mt-1 text-primary focus:ring-primary w-4 h-4"
                     />
                     <div className="flex-1">
@@ -767,22 +869,32 @@ const CheckoutPage = () => {
 
                       {paymentMethod === 'cod' && (
                         <div className="mt-4 pt-3 border-t border-gray-200 max-w-xs space-y-2">
-                          <label className="block text-[11px] font-bold text-gray-600 uppercase">
-                            Enter verification captcha:
+                          <label className="block text-[11px] font-bold text-gray-700 uppercase">
+                            Enter verification code *
                           </label>
                           <div className="flex items-center gap-3">
-                            <span className="bg-amber-100 text-amber-900 font-black tracking-widest text-sm px-3 py-1.5 rounded border border-amber-300 select-none">
+                            <span className="bg-amber-100 text-amber-900 font-black tracking-widest text-sm px-3.5 py-1.5 rounded border border-amber-300 select-none shadow-inner">
                               {captchaCode}
                             </span>
                             <input
                               type="text"
                               maxLength={4}
-                              placeholder="Enter digits"
+                              placeholder="Enter 4 digits"
                               value={captchaInput}
-                              onChange={(e) => setCaptchaInput(e.target.value)}
-                              className="w-28 px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                              onChange={(e) => {
+                                setCaptchaInput(e.target.value);
+                                setCodError('');
+                              }}
+                              className={`w-32 px-3 py-1.5 text-xs border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                                codError ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                              }`}
                             />
                           </div>
+                          {codError && (
+                            <p className="text-xs text-red-600 font-bold mt-1 flex items-center gap-1">
+                              <span>⚠️</span> {codError}
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>

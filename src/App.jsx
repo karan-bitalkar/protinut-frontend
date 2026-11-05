@@ -19,6 +19,7 @@ import { initialWishlistProducts } from './wishlistData';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ProductsPage from './pages/ProductsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import BenefitsPage from './pages/BenefitsPage';
 import RecipesPage from './pages/RecipesPage';
 import BlogPage from './pages/BlogPage';

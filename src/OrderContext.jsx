@@ -70,11 +70,11 @@ export const OrderProvider = ({ children }) => {
       pricing: {
         subtotal: Number(subtotal),
         discount: Number(discount || 0),
-        cgst: Number(cgst ?? ((subtotal * 0.025)).toFixed(2)),
-        sgst: Number(sgst ?? ((subtotal * 0.025)).toFixed(2)),
-        totalGst: Number(totalGst ?? ((subtotal * 0.05)).toFixed(2)),
+        cgst: Number(((Number(subtotal) * 2.5) / 100).toFixed(2)),
+        sgst: Number(((Number(subtotal) * 2.5) / 100).toFixed(2)),
+        totalGst: Number(((Number(subtotal) * 5) / 100).toFixed(2)),
         deliveryCharge: Number(deliveryCharge || 0),
-        grandTotal: Number(grandTotal)
+        grandTotal: Number((Number(subtotal) + ((Number(subtotal) * 5) / 100) + Number(deliveryCharge || 0) - Number(discount || 0)).toFixed(2))
       },
       timeline: [
         { step: 'Order Placed', date: formattedDate, desc: 'Your order has been received and confirmed.', completed: true },

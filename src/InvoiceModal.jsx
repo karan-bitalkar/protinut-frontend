@@ -71,17 +71,14 @@ const InvoiceModal = ({ isOpen, onClose, order }) => {
         return sum + (price * qty);
       }, 0);
 
-  const cgst = order.pricing?.cgst != null
-    ? Number(order.pricing.cgst)
-    : Number(((subtotal * 2.5) / 100).toFixed(2));
-  const sgst = order.pricing?.sgst != null
-    ? Number(order.pricing.sgst)
-    : Number(((subtotal * 2.5) / 100).toFixed(2));
+  // 2.5% CGST and 2.5% SGST calculation
+  const cgst = Number(((subtotal * 2.5) / 100).toFixed(2));
+  const sgst = Number(((subtotal * 2.5) / 100).toFixed(2));
   const delivery = Number(order.pricing?.deliveryCharge || 0);
   const discount = Number(order.pricing?.discount || 0);
-  const grandTotal = order.pricing?.grandTotal != null
-    ? Number(order.pricing.grandTotal)
-    : Number((subtotal + cgst + sgst + delivery - discount).toFixed(2));
+
+  // Final Amount (Grand Total) ALWAYS includes: Subtotal + CGST (2.5%) + SGST (2.5%) + Delivery - Discount
+  const grandTotal = Number((subtotal + cgst + sgst + delivery - discount).toFixed(2));
 
   // ── PDF Export Functionality ──
   const handleDownloadPDF = async () => {

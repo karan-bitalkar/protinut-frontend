@@ -95,13 +95,14 @@ const SideCartDrawer = ({
   const totalItemsCount = displayItems.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = displayItems.reduce((acc, item) => acc + item.finalPrice * item.quantity, 0);
   const discountAmount = couponApplied ? 20 : 0; // ₹20 off
-  const grandTotal = Math.max(0, subtotal - discountAmount);
 
-  // 12% GST Calculation
-  const taxableValue = (grandTotal / 1.12).toFixed(2);
-  const totalGst = (grandTotal - parseFloat(taxableValue)).toFixed(2);
-  const cgst = (parseFloat(totalGst) / 2).toFixed(2);
-  const sgst = (parseFloat(totalGst) / 2).toFixed(2);
+  // 5% Total GST split into CGST (2.5%) & SGST (2.5%)
+  const cgst = displayItems.length > 0 ? Number(((subtotal * 2.5) / 100).toFixed(2)) : 0;
+  const sgst = displayItems.length > 0 ? Number(((subtotal * 2.5) / 100).toFixed(2)) : 0;
+  const totalGst = Number((cgst + sgst).toFixed(2));
+
+  // Final Grand Total = Subtotal + CGST (2.5%) + SGST (2.5%) - discountAmount
+  const grandTotal = displayItems.length > 0 ? Number((subtotal + cgst + sgst - discountAmount).toFixed(2)) : 0;
 
   const handleApplyCoupon = (e) => {
     e.preventDefault();
@@ -472,7 +473,17 @@ const SideCartDrawer = ({
 
                 <div className="summary-line">
                   <span className="summary-label">Subtotal</span>
-                  <span className="summary-val">₹{subtotal}</span>
+                  <span className="summary-val">₹{subtotal.toFixed(2)}</span>
+                </div>
+
+                <div className="summary-line">
+                  <span className="summary-label">CGST (2.5%)</span>
+                  <span className="summary-val">₹{cgst.toFixed(2)}</span>
+                </div>
+
+                <div className="summary-line">
+                  <span className="summary-label">SGST (2.5%)</span>
+                  <span className="summary-val">₹{sgst.toFixed(2)}</span>
                 </div>
 
                 <div className="summary-line">
@@ -483,7 +494,7 @@ const SideCartDrawer = ({
                 {couponApplied && (
                   <div className="summary-line">
                     <span className="summary-label">Coupon Discount (PRO20)</span>
-                    <span className="summary-val-green">- ₹{discountAmount}</span>
+                    <span className="summary-val-green">- ₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
 

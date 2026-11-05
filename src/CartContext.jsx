@@ -37,15 +37,15 @@ export const CartProvider = ({ children }) => {
   const discount = Math.max(0, originalPriceTotal - subtotal);
 
   // 5% Total GST split into CGST (2.5%) & SGST (2.5%)
-  const cgst = cartItems.length > 0 ? Math.round(subtotal * 0.025) : 0;
-  const sgst = cartItems.length > 0 ? Math.round(subtotal * 0.025) : 0;
-  const totalGst = cgst + sgst;
+  const cgst = cartItems.length > 0 ? Number(((subtotal * 2.5) / 100).toFixed(2)) : 0;
+  const sgst = cartItems.length > 0 ? Number(((subtotal * 2.5) / 100).toFixed(2)) : 0;
+  const totalGst = Number((cgst + sgst).toFixed(2));
 
   // Delivery charge: Free if Subtotal > 499, otherwise 40 (0 if empty)
   const deliveryCharge = (subtotal > 499 || cartItems.length === 0) ? 0 : 40;
 
-  // Grand Total = Subtotal + Delivery + CGST + SGST (or Original MRP - Discount + Delivery + CGST + SGST)
-  const grandTotal = cartItems.length > 0 ? (subtotal + deliveryCharge + cgst + sgst) : 0;
+  // Grand Total = Subtotal + CGST (2.5%) + SGST (2.5%) + Delivery
+  const grandTotal = cartItems.length > 0 ? Number((subtotal + deliveryCharge + cgst + sgst).toFixed(2)) : 0;
 
   const addToCart = (product, quantity = 1, selectedWeight = null) => {
     const weight = selectedWeight || product.selectedWeight || '550gm';
